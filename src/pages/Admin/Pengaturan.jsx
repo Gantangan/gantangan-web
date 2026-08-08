@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Image, Landmark, Megaphone } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Image, Landmark, Megaphone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PaymentCard from "@/components/PaymentCard";
@@ -15,30 +15,63 @@ const SUB_TABS = [
 
 export default function AdminPengaturan() {
   const [tab, setTab] = useState("logo");
+  const [navOpen, setNavOpen] = useState(false);
+  const navRef = useRef(null);
+  const activeTab = SUB_TABS.find((t) => t.id === tab);
+
+  // Klik di luar dropdown -> otomatis tertutup juga
+  useEffect(() => {
+    if (!navOpen) return;
+    function handleClickOutside(e) {
+      if (navRef.current && !navRef.current.contains(e.target)) setNavOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [navOpen]);
+
+  function selectTab(id) {
+    setTab(id);
+    setNavOpen(false); // auto-hide setelah pilih sub
+  }
 
   return (
     <div>
       <h1 className="font-display text-2xl font-bold text-ink">Pengaturan</h1>
 
-      <div className="mt-5 flex flex-col gap-5 md:flex-row">
-        {/* Sub-sidebar */}
-        <nav className="flex flex-row gap-1 overflow-x-auto rounded-card border border-border bg-white p-1.5 md:w-52 md:min-w-[13rem] md:flex-col md:overflow-visible">
-          {SUB_TABS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${
-                tab === t.id ? "bg-ink text-cream" : "text-muted hover:bg-cream"
-              }`}
-            >
-              <t.icon className="h-4 w-4 shrink-0" />
-              {t.label}
-            </button>
-          ))}
-        </nav>
+      <div className="mt-5 max-w-md">
+        {/* Sub-navigasi: tombol dropdown yang auto-hide */}
+        <div ref={navRef} className="relative">
+          <button
+            onClick={() => setNavOpen((o) => !o)}
+            className="flex w-full items-center justify-between gap-2 rounded-card border border-border bg-white px-4 py-2.5 text-sm font-semibold text-ink shadow-sm"
+          >
+            <span className="flex items-center gap-2">
+              {activeTab && <activeTab.icon className="h-4 w-4 text-gold" />}
+              {activeTab?.label}
+            </span>
+            <ChevronDown className={`h-4 w-4 text-muted transition-transform ${navOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          {navOpen && (
+            <nav className="absolute left-0 right-0 top-full z-10 mt-1 flex flex-col gap-0.5 rounded-card border border-border bg-white p-1.5 shadow-lg">
+              {SUB_TABS.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => selectTab(t.id)}
+                  className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${
+                    tab === t.id ? "bg-ink text-cream" : "text-muted hover:bg-cream"
+                  }`}
+                >
+                  <t.icon className="h-4 w-4 shrink-0" />
+                  {t.label}
+                </button>
+              ))}
+            </nav>
+          )}
+        </div>
 
         {/* Konten sub */}
-        <div className="flex-1 min-w-0 max-w-md">
+        <div className="mt-4">
           {tab === "logo" && <LogoSection />}
           {tab === "rekening" && <RekeningSection />}
           {tab === "pengumuman" && <PengumumanSection />}
