@@ -57,6 +57,11 @@ export default function Booking() {
     }
     showToast("ok", `Nomor ${bookingSlot.no} dipesan. Transfer dalam ${HOLD_MINUTES} menit.`);
     setBookingSlot(null);
+    if (currentUser?.role === "peserta") {
+      // Balik ke Dashboard biar peserta tidak bingung — dari situ mereka lihat
+      // pilihan Pilih Kategori, Riwayat Booking, dan Profil Saya dengan jelas.
+      setTimeout(() => navigate("/dashboard"), 600);
+    }
   }
 
   return (
