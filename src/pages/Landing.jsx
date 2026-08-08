@@ -41,7 +41,7 @@ export default function Landing() {
         transition={{ duration: 0.5 }}
         className="flex flex-col items-center bg-gradient-to-br from-ink to-inkSoft px-6 pb-8 pt-10 text-center text-cream"
       >
-        <div className="mb-2 font-mono text-xs tracking-[0.3em] text-gold">◈ GANTANGAN</div>
+        <div className="mb-2 font-mono text-xs tracking-[0.3em] text-gold">◈ GANTANGAN KEBOKICAK</div>
         <h1 className="font-display text-3xl font-bold leading-tight">Lomba Burung Berkicau</h1>
         <p className="mt-2 max-w-xs text-sm text-border">Daftar nomor gantangan favoritmu, cepat dan mudah.</p>
 

@@ -9,7 +9,7 @@ export default function Header({ subtitle, actions }) {
       <Link to="/" className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-gold text-lg text-gold">◈</div>
         <div>
-          <div className="font-display text-base tracking-wide">GANTANGAN</div>
+          <div className="font-display text-base tracking-wide">GANTANGAN KEBOKICAK</div>
           {subtitle && <div className="text-xs text-border">{subtitle}</div>}
         </div>
       </Link>

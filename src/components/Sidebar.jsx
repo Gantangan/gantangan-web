@@ -24,7 +24,7 @@ export default function Sidebar() {
     <aside className="flex w-full flex-row items-center gap-1 overflow-x-auto bg-ink px-2 py-2 text-cream md:w-44 md:min-w-[176px] md:flex-col md:items-stretch md:gap-1 md:overflow-visible md:px-3 md:py-5">
       <div className="mb-3 hidden items-center gap-2 px-2 md:flex">
         <div className="flex h-8 w-8 items-center justify-center rounded-md border-2 border-gold text-gold">◈</div>
-        <span className="font-display text-sm tracking-wide">GANTANGAN</span>
+        <span className="font-display text-xs leading-tight tracking-wide">GANTANGAN KEBOKICAK</span>
       </div>
 
       <nav className="flex flex-1 flex-row gap-1 overflow-x-auto md:flex-col md:overflow-visible">
