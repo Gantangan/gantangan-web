@@ -6,12 +6,14 @@ const SettingsContext = createContext(null);
 export function SettingsProvider({ children }) {
   const [announcements, setAnnouncements] = useState([]);
   const [paymentAccounts, setPaymentAccounts] = useState([]);
+  const [logo, setLogoState] = useState(null); // data URL gambar logo, atau null kalau belum diatur
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
       setAnnouncements((await getItem("announcements", null)) || []);
       setPaymentAccounts((await getItem("paymentAccounts", null)) || []);
+      setLogoState((await getItem("logo", null)) || null);
       setLoaded(true);
     })();
   }, []);
@@ -54,9 +56,30 @@ export function SettingsProvider({ children }) {
     [paymentAccounts]
   );
 
+  const setLogo = useCallback((dataUrl) => {
+    setLogoState(dataUrl);
+    setItem("logo", dataUrl);
+  }, []);
+
+  const removeLogo = useCallback(() => {
+    setLogoState(null);
+    setItem("logo", null);
+  }, []);
+
   return (
     <SettingsContext.Provider
-      value={{ announcements, paymentAccounts, loaded, addAnnouncement, removeAnnouncement, addAccount, removeAccount }}
+      value={{
+        announcements,
+        paymentAccounts,
+        logo,
+        loaded,
+        addAnnouncement,
+        removeAnnouncement,
+        addAccount,
+        removeAccount,
+        setLogo,
+        removeLogo,
+      }}
     >
       {children}
     </SettingsContext.Provider>

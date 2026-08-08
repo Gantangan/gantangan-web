@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { LayoutDashboard, Ticket, Bird, Users, CreditCard, FileBarChart, Settings, Target, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth.jsx";
+import Logo from "@/components/Logo";
 
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -23,7 +24,7 @@ export default function Sidebar() {
   return (
     <aside className="flex w-full flex-row items-center gap-1 overflow-x-auto bg-ink px-2 py-2 text-cream md:w-44 md:min-w-[176px] md:flex-col md:items-stretch md:gap-1 md:overflow-visible md:px-3 md:py-5">
       <div className="mb-3 hidden items-center gap-2 px-2 md:flex">
-        <div className="flex h-8 w-8 items-center justify-center rounded-md border-2 border-gold text-gold">◈</div>
+        <Logo size={32} />
         <span className="font-display text-xs leading-tight tracking-wide">GANTANGAN KEBOKICAK</span>
       </div>
 
