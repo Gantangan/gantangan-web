@@ -6,7 +6,7 @@ import { useToast } from "@/components/Toast";
 import { HARI_LABEL, HARI_LOMBA, formatTanggalPanjang } from "@/utils/date";
 
 export default function AdminKategori() {
-  const { categories, getHarga, getJadwal, getBanner, isBookingClosed, addCategory, renameCategory, removeCategory, updateCategoryConfig } = useBooking();
+  const { categories, getHarga, getJadwal, isBookingClosed, addCategory, renameCategory, removeCategory, updateCategoryConfig } = useBooking();
   const showToast = useToast();
   const [newName, setNewName] = useState("");
   const [selectedId, setSelectedId] = useState(categories[0]?.id || "");
@@ -18,21 +18,6 @@ export default function AdminKategori() {
     if (!newName.trim()) return;
     addCategory(newName);
     setNewName("");
-  }
-
-  function handleBannerUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      showToast("error", "Ukuran gambar maksimal 2MB.");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      updateCategoryConfig(selected.id, { banner: reader.result });
-      showToast("ok", "Banner berhasil diganti.");
-    };
-    reader.readAsDataURL(file);
   }
 
   function handleJadwal(e) {
@@ -95,20 +80,6 @@ export default function AdminKategori() {
               Simpan
             </Button>
           </div>
-
-          <label className="mb-1 mt-3 block text-xs font-medium text-muted">Banner Kategori/Event</label>
-          {getBanner(selected.id) && (
-            <img src={getBanner(selected.id)} alt={`Banner ${selected.name}`} className="mb-2 h-28 w-full rounded-lg object-cover" />
-          )}
-          <Input type="file" accept="image/*" onChange={handleBannerUpload} />
-          {getBanner(selected.id) && (
-            <button
-              onClick={() => updateCategoryConfig(selected.id, { banner: "" })}
-              className="mt-1 text-xs text-red-700"
-            >
-              ✕ Hapus banner
-            </button>
-          )}
 
           <label className="mb-1 mt-3 block text-xs font-medium text-muted">Harga Pendaftaran (Rp)</label>
           <Input type="number" min="0" value={getHarga(selected.id)} onChange={(e) => updateCategoryConfig(selected.id, { harga: Math.max(0, Number(e.target.value) || 0) })} />

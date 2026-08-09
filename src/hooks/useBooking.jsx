@@ -71,7 +71,6 @@ export function BookingProvider({ children }) {
 
   const getHarga = useCallback((catId) => categoryConfig[catId]?.harga ?? HARGA_DASAR, [categoryConfig]);
   const getJadwal = useCallback((catId) => categoryConfig[catId]?.jadwal || null, [categoryConfig]);
-  const getBanner = useCallback((catId) => categoryConfig[catId]?.banner || null, [categoryConfig]);
   const isBookingClosed = useCallback((catId) => checkClosed(getJadwal(catId)), [getJadwal]);
 
   const persistBoard = useCallback((next) => {
@@ -195,7 +194,6 @@ export function BookingProvider({ children }) {
         loaded,
         getHarga,
         getJadwal,
-        getBanner,
         isBookingClosed,
         bookSlot,
         submitBukti,

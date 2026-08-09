@@ -15,7 +15,7 @@ import { HOLD_MINUTES, SLOTS_PER_CATEGORY } from "@/constants";
 
 export default function Booking() {
   const { currentUser } = useAuth();
-  const { categories, board, getHarga, getBanner, isBookingClosed, bookSlot } = useBooking();
+  const { categories, board, getHarga, isBookingClosed, bookSlot } = useBooking();
   const showToast = useToast();
   const navigate = useNavigate();
 
@@ -76,24 +76,20 @@ export default function Booking() {
             {categories.map((c) => {
               const count = board[c.id] ? board[c.id].filter((s) => s.status !== "kosong").length : 0;
               const closed = isBookingClosed(c.id);
-              const banner = getBanner(c.id);
               return (
                 <button
                   key={c.id}
                   onClick={() => setActiveCat(c.id)}
-                  className="overflow-hidden rounded-2xl border-2 bg-card text-left"
+                  className="rounded-2xl border-2 bg-card p-4 text-left"
                   style={{ borderColor: c.tagColor }}
                 >
-                  {banner && <img src={banner} alt={c.name} className="h-24 w-full object-cover" />}
-                  <div className="p-4">
-                    <span className="mb-1 inline-block h-3.5 w-3.5 rounded-full" style={{ background: c.tagColor }} />
-                    <div className="font-display font-bold">{c.name}</div>
-                    <div className="font-mono text-xs text-muted">
-                      {count}/{SLOTS_PER_CATEGORY} terisi
-                    </div>
-                    <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
-                    {closed && <div className="mt-1 text-[11px] font-bold text-red-700">Pendaftaran ditutup</div>}
+                  <span className="mb-1 inline-block h-3.5 w-3.5 rounded-full" style={{ background: c.tagColor }} />
+                  <div className="font-display font-bold">{c.name}</div>
+                  <div className="font-mono text-xs text-muted">
+                    {count}/{SLOTS_PER_CATEGORY} terisi
                   </div>
+                  <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
+                  {closed && <div className="mt-1 text-[11px] font-bold text-red-700">Pendaftaran ditutup</div>}
                 </button>
               );
             })}
