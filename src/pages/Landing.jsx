@@ -9,7 +9,7 @@ import { formatRupiah } from "@/utils/format";
 import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
 
 export default function Landing() {
-  const { categories, board, getHarga, getJadwal, loaded } = useBooking();
+  const { categories, board, getHarga, getJadwal, getBanner, loaded } = useBooking();
   const [, forceTick] = useState(0);
 
   // Refresh tiap menit biar countdown tetap akurat.
@@ -81,18 +81,22 @@ export default function Landing() {
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {categories.map((c) => {
             const jadwal = getJadwal(c.id);
+            const banner = getBanner(c.id);
             const count = board[c.id] ? board[c.id].filter((s) => s.status !== "kosong").length : 0;
             return (
-              <div key={c.id} className="rounded-2xl border-2 bg-card p-4" style={{ borderColor: c.tagColor }}>
-                <span className="mb-1 inline-block h-3.5 w-3.5 rounded-full" style={{ background: c.tagColor }} />
-                <div className="font-display font-bold">{c.name}</div>
-                <div className="font-mono text-xs text-muted">{count}/30 terisi</div>
-                <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
-                {jadwal && (
-                  <div className="mt-1 flex items-center gap-1 text-[11px] text-inkSoft">
-                    <CalendarDays className="h-3 w-3" /> {HARI_LABEL[new Date(jadwal + "T00:00:00").getDay()]}
-                  </div>
-                )}
+              <div key={c.id} className="overflow-hidden rounded-2xl border-2 bg-card" style={{ borderColor: c.tagColor }}>
+                {banner && <img src={banner} alt={c.name} className="h-24 w-full object-cover" />}
+                <div className="p-4">
+                  <span className="mb-1 inline-block h-3.5 w-3.5 rounded-full" style={{ background: c.tagColor }} />
+                  <div className="font-display font-bold">{c.name}</div>
+                  <div className="font-mono text-xs text-muted">{count}/30 terisi</div>
+                  <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
+                  {jadwal && (
+                    <div className="mt-1 flex items-center gap-1 text-[11px] text-inkSoft">
+                      <CalendarDays className="h-3 w-3" /> {HARI_LABEL[new Date(jadwal + "T00:00:00").getDay()]}
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}
