@@ -4,7 +4,6 @@ import DashboardCard from "@/components/DashboardCard";
 import { useBooking } from "@/hooks/useBooking";
 import { useAuth } from "@/hooks/useAuth.jsx";
 import { formatRupiah } from "@/utils/format";
-import { SLOTS_PER_CATEGORY } from "@/constants";
 
 const GRANULARITAS = [
   { id: "jam", label: "Per Jam" },
@@ -50,7 +49,7 @@ function formatTooltipLabel(key, granularitas) {
 }
 
 export default function AdminDashboard() {
-  const { categories, board, getHarga } = useBooking();
+  const { categories, board, getHarga, getSlotCount } = useBooking();
   const { users } = useAuth();
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -67,7 +66,7 @@ export default function AdminDashboard() {
   }, [categories, board]);
 
   const totalPeserta = Object.values(users).filter((u) => u.role === "peserta").length;
-  const totalSlot = categories.length * SLOTS_PER_CATEGORY;
+  const totalSlot = categories.reduce((sum, c) => sum + getSlotCount(c.id), 0);
   const totalTerjual = allBookings.length;
 
   const todayStr = new Date().toISOString().slice(0, 10);

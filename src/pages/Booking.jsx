@@ -11,11 +11,11 @@ import { useAuth } from "@/hooks/useAuth.jsx";
 import { useBooking } from "@/hooks/useBooking";
 import { useToast } from "@/components/Toast";
 import { formatRupiah } from "@/utils/format";
-import { HOLD_MINUTES, SLOTS_PER_CATEGORY } from "@/constants";
+import { HOLD_MINUTES } from "@/constants";
 
 export default function Booking() {
   const { currentUser } = useAuth();
-  const { categories, board, getHarga, isBookingClosed, bookSlot } = useBooking();
+  const { categories, board, getHarga, getSlotCount, isBookingClosed, bookSlot } = useBooking();
   const showToast = useToast();
   const navigate = useNavigate();
 
@@ -86,7 +86,7 @@ export default function Booking() {
                   <span className="mb-1 inline-block h-3.5 w-3.5 rounded-full" style={{ background: c.tagColor }} />
                   <div className="font-display font-bold">{c.name}</div>
                   <div className="font-mono text-xs text-muted">
-                    {count}/{SLOTS_PER_CATEGORY} terisi
+                    {count}/{getSlotCount(c.id)} terisi
                   </div>
                   <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
                   {closed && <div className="mt-1 text-[11px] font-bold text-red-700">Pendaftaran ditutup</div>}

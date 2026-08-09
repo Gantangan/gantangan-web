@@ -21,8 +21,8 @@ function emptySlot(no) {
   };
 }
 
-function emptyCategorySlots() {
-  return Array.from({ length: SLOTS_PER_CATEGORY }, (_, i) => emptySlot(i + 1));
+function emptyCategorySlots(count = SLOTS_PER_CATEGORY) {
+  return Array.from({ length: count }, (_, i) => emptySlot(i + 1));
 }
 
 export function BookingProvider({ children }) {
@@ -71,6 +71,10 @@ export function BookingProvider({ children }) {
 
   const getHarga = useCallback((catId) => categoryConfig[catId]?.harga ?? HARGA_DASAR, [categoryConfig]);
   const getJadwal = useCallback((catId) => categoryConfig[catId]?.jadwal || null, [categoryConfig]);
+  const getSlotCount = useCallback(
+    (catId) => categoryConfig[catId]?.slotCount ?? SLOTS_PER_CATEGORY,
+    [categoryConfig]
+  );
   const isBookingClosed = useCallback((catId) => checkClosed(getJadwal(catId)), [getJadwal]);
 
   const persistBoard = useCallback((next) => {
@@ -186,6 +190,36 @@ export function BookingProvider({ children }) {
     [categories, board, persistBoard]
   );
 
+  const resizeCategory = useCallback(
+    (catId, newCount) => {
+      const count = Math.max(1, Math.min(500, Math.floor(Number(newCount) || 0)));
+      const current = board[catId] || [];
+      if (count === current.length) return { ok: true };
+
+      if (count > current.length) {
+        // Tambah petak baru (kosong) di akhir
+        const extra = Array.from({ length: count - current.length }, (_, i) => emptySlot(current.length + i + 1));
+        const nextBoard = { ...board, [catId]: [...current, ...extra] };
+        persistBoard(nextBoard);
+      } else {
+        // Mengurangi: hanya boleh kalau nomor yang mau dihapus semuanya masih kosong
+        const toRemove = current.slice(count);
+        const hasBooking = toRemove.some((s) => s.status !== "kosong");
+        if (hasBooking) {
+          return {
+            ok: false,
+            error: `Tidak bisa mengurangi — nomor ${count + 1} ke atas masih ada yang sudah dipesan. Kosongkan/batalkan dulu nomor itu.`,
+          };
+        }
+        const nextBoard = { ...board, [catId]: current.slice(0, count) };
+        persistBoard(nextBoard);
+      }
+      updateCategoryConfig(catId, { slotCount: count });
+      return { ok: true };
+    },
+    [board, persistBoard, updateCategoryConfig]
+  );
+
   return (
     <BookingContext.Provider
       value={{
@@ -194,6 +228,7 @@ export function BookingProvider({ children }) {
         loaded,
         getHarga,
         getJadwal,
+        getSlotCount,
         isBookingClosed,
         bookSlot,
         submitBukti,
@@ -201,6 +236,7 @@ export function BookingProvider({ children }) {
         addCategory,
         renameCategory,
         removeCategory,
+        resizeCategory,
         updateCategoryConfig,
       }}
     >

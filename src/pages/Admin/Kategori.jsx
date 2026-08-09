@@ -6,18 +6,27 @@ import { useToast } from "@/components/Toast";
 import { HARI_LABEL, HARI_LOMBA, formatTanggalPanjang } from "@/utils/date";
 
 export default function AdminKategori() {
-  const { categories, getHarga, getJadwal, isBookingClosed, addCategory, renameCategory, removeCategory, updateCategoryConfig } = useBooking();
+  const { categories, board, getHarga, getJadwal, getSlotCount, isBookingClosed, addCategory, renameCategory, removeCategory, resizeCategory, updateCategoryConfig } = useBooking();
   const showToast = useToast();
   const [newName, setNewName] = useState("");
   const [selectedId, setSelectedId] = useState(categories[0]?.id || "");
   const [editName, setEditName] = useState("");
+  const [slotInput, setSlotInput] = useState("");
 
   const selected = categories.find((c) => c.id === selectedId) || categories[0];
+  const terisi = selected ? (board[selected.id] || []).filter((s) => s.status !== "kosong").length : 0;
 
   function handleAdd() {
     if (!newName.trim()) return;
     addCategory(newName);
     setNewName("");
+  }
+
+  function handleResize() {
+    const res = resizeCategory(selected.id, slotInput);
+    if (!res.ok) showToast("error", res.error);
+    else showToast("ok", "Jumlah nomor berhasil diubah.");
+    setSlotInput("");
   }
 
   function handleJadwal(e) {
@@ -80,6 +89,25 @@ export default function AdminKategori() {
               Simpan
             </Button>
           </div>
+
+          <label className="mb-1 mt-3 block text-xs font-medium text-muted">Jumlah Petak Nomor</label>
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              min="1"
+              value={slotInput}
+              onChange={(e) => setSlotInput(e.target.value)}
+              placeholder={String(getSlotCount(selected.id))}
+              className="flex-1"
+            />
+            <Button size="sm" onClick={handleResize}>
+              Simpan
+            </Button>
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            Sekarang {getSlotCount(selected.id)} nomor ({terisi} sudah terisi). Boleh ditambah kapan saja; mengurangi
+            hanya bisa kalau nomor yang dihapus masih kosong.
+          </p>
 
           <label className="mb-1 mt-3 block text-xs font-medium text-muted">Harga Pendaftaran (Rp)</label>
           <Input type="number" min="0" value={getHarga(selected.id)} onChange={(e) => updateCategoryConfig(selected.id, { harga: Math.max(0, Number(e.target.value) || 0) })} />

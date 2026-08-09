@@ -9,7 +9,7 @@ import { formatRupiah } from "@/utils/format";
 import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
 
 export default function Landing() {
-  const { categories, board, getHarga, getJadwal, loaded } = useBooking();
+  const { categories, board, getHarga, getJadwal, getSlotCount, loaded } = useBooking();
   const [, forceTick] = useState(0);
 
   // Refresh tiap menit biar countdown tetap akurat.
@@ -86,7 +86,7 @@ export default function Landing() {
               <div key={c.id} className="rounded-2xl border-2 bg-card p-4" style={{ borderColor: c.tagColor }}>
                 <span className="mb-1 inline-block h-3.5 w-3.5 rounded-full" style={{ background: c.tagColor }} />
                 <div className="font-display font-bold">{c.name}</div>
-                <div className="font-mono text-xs text-muted">{count}/30 terisi</div>
+                <div className="font-mono text-xs text-muted">{count}/{getSlotCount(c.id)} terisi</div>
                 <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
                 {jadwal && (
                   <div className="mt-1 flex items-center gap-1 text-[11px] text-inkSoft">
