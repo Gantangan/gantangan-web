@@ -18,6 +18,7 @@ export default function BookingCard({ booking, nominal, right, children }) {
             Burung: {booking.burung}
             {nominal != null && <> • {formatRupiah(nominal)}</>}
           </div>
+          {booking.kodeBooking && <div className="font-mono text-[11px] text-goldDeep">{booking.kodeBooking}</div>}
         </div>
       </div>
       <div className="flex items-center gap-2">

@@ -72,6 +72,9 @@ export default function Landing() {
             Masuk
           </Link>
         </div>
+        <Link to="/cek-pesanan" className="mt-3 text-xs font-semibold text-gold underline underline-offset-2">
+          Sudah booking? Cek status pesanan
+        </Link>
       </motion.section>
 
       <Ticker items={[]} />

@@ -21,7 +21,8 @@ export default function Booking() {
 
   const [activeCat, setActiveCat] = useState(null);
   const [bookingSlot, setBookingSlot] = useState(null); // {catId, no}
-  const [burung, setBurung] = useState("");
+  const [form, setForm] = useState({ namaPeserta: "", whatsapp: "", burung: "", namaPemilik: "", alamat: "", catatan: "" });
+  const [successInfo, setSuccessInfo] = useState(null); // {kodeBooking, no, catName}
 
   const cat = categories.find((c) => c.id === activeCat);
   const slots = cat ? board[cat.id] || [] : [];
@@ -41,27 +42,42 @@ export default function Booking() {
       return;
     }
     setBookingSlot({ catId: cat.id, no: slot.no });
-    setBurung("");
+    setForm({
+      namaPeserta: currentUser.nama || "",
+      whatsapp: currentUser.hp || "",
+      burung: "",
+      namaPemilik: "",
+      alamat: "",
+      catatan: "",
+    });
   }
 
   function handleSubmitBooking() {
-    if (!burung.trim()) {
-      showToast("error", "Isi nama burung dulu.");
+    if (!form.namaPeserta.trim()) {
+      showToast("error", "Nama peserta wajib diisi.");
       return;
     }
-    const res = bookSlot(bookingSlot.catId, bookingSlot.no, currentUser, burung.trim());
+    if (!form.whatsapp.trim()) {
+      showToast("error", "Nomor WhatsApp wajib diisi.");
+      return;
+    }
+    if (!form.burung.trim()) {
+      showToast("error", "Nama burung wajib diisi.");
+      return;
+    }
+    const res = bookSlot(bookingSlot.catId, bookingSlot.no, currentUser, form);
     if (!res.ok) {
       showToast("error", res.error);
       setBookingSlot(null);
       return;
     }
-    showToast("ok", `Nomor ${bookingSlot.no} dipesan. Transfer dalam ${HOLD_MINUTES} menit.`);
+    setSuccessInfo({ kodeBooking: res.kodeBooking, no: bookingSlot.no, catName: cat.name });
     setBookingSlot(null);
-    if (currentUser?.role === "peserta") {
-      // Balik ke Dashboard biar peserta tidak bingung — dari situ mereka lihat
-      // pilihan Pilih Kategori, Riwayat Booking, dan Profil Saya dengan jelas.
-      setTimeout(() => navigate("/dashboard"), 600);
-    }
+  }
+
+  function closeSuccessAndGo() {
+    setSuccessInfo(null);
+    if (currentUser?.role === "peserta") navigate("/dashboard");
   }
 
   return (
@@ -118,8 +134,34 @@ export default function Booking() {
             {cat?.name} — No. {bookingSlot?.no}
           </DialogTitle>
           <DialogDescription>Nomor ditahan {HOLD_MINUTES} menit setelah dipesan.</DialogDescription>
-          <label className="mb-1 block text-xs font-medium text-muted">Nama Burung</label>
-          <Input value={burung} onChange={(e) => setBurung(e.target.value)} placeholder="Contoh: Rajawali" autoFocus />
+
+          <div className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto pr-1">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted">Nama Peserta *</label>
+              <Input value={form.namaPeserta} onChange={(e) => setForm({ ...form, namaPeserta: e.target.value })} autoFocus />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted">Nomor WhatsApp *</label>
+              <Input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} placeholder="08xx-xxxx-xxxx" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted">Nama Burung *</label>
+              <Input value={form.burung} onChange={(e) => setForm({ ...form, burung: e.target.value })} placeholder="Contoh: Rajawali" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted">Nama Pemilik (jika berbeda)</label>
+              <Input value={form.namaPemilik} onChange={(e) => setForm({ ...form, namaPemilik: e.target.value })} placeholder="Opsional" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted">Alamat</label>
+              <Input value={form.alamat} onChange={(e) => setForm({ ...form, alamat: e.target.value })} placeholder="Opsional" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted">Catatan</label>
+              <Input value={form.catatan} onChange={(e) => setForm({ ...form, catatan: e.target.value })} placeholder="Opsional" />
+            </div>
+          </div>
+
           <div className="mt-4 flex gap-2">
             <Button variant="ghost" className="flex-1" onClick={() => setBookingSlot(null)}>
               Batal
@@ -128,6 +170,25 @@ export default function Booking() {
               Pesan Nomor
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!successInfo} onOpenChange={(open) => !open && closeSuccessAndGo()}>
+        <DialogContent>
+          <DialogTitle>🎉 Booking Berhasil!</DialogTitle>
+          <DialogDescription>
+            {successInfo?.catName} — No. {successInfo?.no}. Simpan kode booking ini untuk cek status kapan saja.
+          </DialogDescription>
+          <div className="my-3 rounded-xl border-2 border-dashed border-gold bg-gold/10 p-4 text-center">
+            <div className="text-xs text-muted">Kode Booking</div>
+            <div className="font-mono text-xl font-bold tracking-wider text-ink">{successInfo?.kodeBooking}</div>
+          </div>
+          <p className="text-xs text-muted">
+            Transfer dalam {HOLD_MINUTES} menit, lalu upload bukti di halaman Riwayat Booking.
+          </p>
+          <Button className="mt-4 w-full" onClick={closeSuccessAndGo}>
+            Oke, Lanjutkan
+          </Button>
         </DialogContent>
       </Dialog>
     </div>

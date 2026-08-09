@@ -10,9 +10,13 @@ function emptySlot(no) {
     no,
     status: "kosong",
     ownerEmail: null,
-    pemilik: "",
+    pemilik: "", // nama peserta yang mengisi form (bisa beda dari nama akun)
     burung: "",
+    namaPemilik: "", // nama pemilik burung, kalau beda dari pemesan
+    alamat: "",
+    catatan: "",
     hp: "",
+    kodeBooking: null,
     bookedAt: null,
     kodeUnik: null,
     buktiTransfer: null,
@@ -91,8 +95,22 @@ export function BookingProvider({ children }) {
     return code;
   }
 
+  function generateKodeBooking(boardState) {
+    const year = new Date().getFullYear();
+    let maxSeq = 0;
+    Object.values(boardState).forEach((slots) => {
+      (slots || []).forEach((s) => {
+        if (s.kodeBooking) {
+          const match = s.kodeBooking.match(/^GTG-(\d{4})-(\d+)$/);
+          if (match && Number(match[1]) === year) maxSeq = Math.max(maxSeq, Number(match[2]));
+        }
+      });
+    });
+    return `GTG-${year}-${String(maxSeq + 1).padStart(5, "0")}`;
+  }
+
   const bookSlot = useCallback(
-    (catId, no, user, burung) => {
+    (catId, no, user, form) => {
       const idx = no - 1;
       if (board[catId][idx].status !== "kosong") return { ok: false, error: "Nomor ini baru saja diambil orang lain." };
       const next = { ...board };
@@ -101,9 +119,13 @@ export function BookingProvider({ children }) {
         no,
         status: "pending",
         ownerEmail: user.email,
-        pemilik: user.nama,
-        burung,
-        hp: user.hp,
+        pemilik: form.namaPeserta || user.nama,
+        burung: form.burung,
+        namaPemilik: form.namaPemilik || "",
+        alamat: form.alamat || "",
+        catatan: form.catatan || "",
+        hp: form.whatsapp || user.hp,
+        kodeBooking: generateKodeBooking(board),
         bookedAt: Date.now(),
         kodeUnik: generateKodeUnik(catId, board),
         buktiTransfer: null,
@@ -111,7 +133,7 @@ export function BookingProvider({ children }) {
         confirmedAt: null,
       };
       persistBoard(next);
-      return { ok: true };
+      return { ok: true, kodeBooking: next[catId][idx].kodeBooking };
     },
     [board, persistBoard]
   );
@@ -220,6 +242,24 @@ export function BookingProvider({ children }) {
     [board, persistBoard, updateCategoryConfig]
   );
 
+  const findBooking = useCallback(
+    (query) => {
+      const q = query.trim().toLowerCase();
+      if (!q) return null;
+      for (const c of categories) {
+        const slots = board[c.id] || [];
+        for (const s of slots) {
+          if (s.status === "kosong") continue;
+          const matchKode = s.kodeBooking && s.kodeBooking.toLowerCase() === q;
+          const matchHp = s.hp && s.hp.replace(/[^0-9]/g, "") === q.replace(/[^0-9]/g, "") && q.replace(/[^0-9]/g, "").length >= 8;
+          if (matchKode || matchHp) return { ...s, catId: c.id, catName: c.name, harga: getHarga(c.id) };
+        }
+      }
+      return null;
+    },
+    [categories, board, getHarga]
+  );
+
   return (
     <BookingContext.Provider
       value={{
@@ -238,6 +278,7 @@ export function BookingProvider({ children }) {
         removeCategory,
         resizeCategory,
         updateCategoryConfig,
+        findBooking,
       }}
     >
       {children}

@@ -43,6 +43,7 @@ export default function AdminBooking() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b-2 border-border text-left text-xs text-muted">
+              <th className="px-3 py-2">Kode Booking</th>
               <th className="px-3 py-2">Kategori</th>
               <th className="px-3 py-2">No</th>
               <th className="px-3 py-2">Peserta</th>
@@ -56,6 +57,7 @@ export default function AdminBooking() {
           <tbody>
             {rows.map((b) => (
               <tr key={`${b.catId}-${b.no}`} className="border-b border-border/60">
+                <td className="px-3 py-2 font-mono text-xs">{b.kodeBooking || "-"}</td>
                 <td className="px-3 py-2">{b.catName}</td>
                 <td className="px-3 py-2">{b.no}</td>
                 <td className="px-3 py-2">{b.pemilik}</td>

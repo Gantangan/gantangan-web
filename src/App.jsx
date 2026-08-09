@@ -9,6 +9,7 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Booking from "@/pages/Booking";
+import CekPesanan from "@/pages/CekPesanan";
 import Riwayat from "@/pages/Riwayat";
 import Settings from "@/pages/Settings";
 import Admin from "@/pages/Admin";
@@ -40,6 +41,7 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/daftar" element={<Register />} />
                 <Route path="/booking" element={<Booking />} />
+                <Route path="/cek-pesanan" element={<CekPesanan />} />
                 <Route
                   path="/dashboard"
                   element={
