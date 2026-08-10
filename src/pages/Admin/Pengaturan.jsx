@@ -134,12 +134,42 @@ function LogoSection() {
 
 function RekeningSection() {
   const { paymentAccounts, addAccount, removeAccount } = useSettings();
-  const [newAccount, setNewAccount] = useState({ jenis: "Bank", nama: "", nomor: "", atasNama: "" });
+  const showToast = useToast();
+  const [newAccount, setNewAccount] = useState({ jenis: "Bank", nama: "", nomor: "", atasNama: "", qrImage: "" });
+  const [qrPreview, setQrPreview] = useState("");
+  const isQris = newAccount.jenis === "QRIS";
+
+  async function handleQrUpload(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showToast("error", "File harus berupa gambar (JPG/PNG).");
+      return;
+    }
+    try {
+      // Format PNG (bukan JPEG) supaya kode QR tetap tajam dan gampang dipindai.
+      const compressed = await compressImage(file, { maxSize: 600, format: "png" });
+      setNewAccount({ ...newAccount, qrImage: compressed });
+      setQrPreview(compressed);
+    } catch (err) {
+      showToast("error", err.message || "Gagal memproses gambar QR.");
+    }
+  }
 
   function handleAddAccount() {
-    if (!newAccount.nama.trim() || !newAccount.nomor.trim() || !newAccount.atasNama.trim()) return;
+    if (!newAccount.nama.trim() || !newAccount.atasNama.trim()) return;
+    if (isQris && !newAccount.qrImage) {
+      showToast("error", "Upload dulu gambar QR code-nya.");
+      return;
+    }
+    if (!isQris && !newAccount.nomor.trim()) {
+      showToast("error", "Nomor rekening/HP wajib diisi.");
+      return;
+    }
     addAccount(newAccount);
-    setNewAccount({ jenis: "Bank", nama: "", nomor: "", atasNama: "" });
+    setNewAccount({ jenis: "Bank", nama: "", nomor: "", atasNama: "", qrImage: "" });
+    setQrPreview("");
   }
 
   return (
@@ -156,8 +186,25 @@ function RekeningSection() {
           <option>E-Wallet</option>
           <option>QRIS</option>
         </select>
-        <Input value={newAccount.nama} onChange={(e) => setNewAccount({ ...newAccount, nama: e.target.value })} placeholder="Nama bank/e-wallet" />
-        <Input value={newAccount.nomor} onChange={(e) => setNewAccount({ ...newAccount, nomor: e.target.value })} placeholder="Nomor rekening / HP" />
+        <Input
+          value={newAccount.nama}
+          onChange={(e) => setNewAccount({ ...newAccount, nama: e.target.value })}
+          placeholder={isQris ? "Contoh: QRIS (GoPay/ShopeePay/OVO/DANA)" : "Nama bank/e-wallet"}
+        />
+        {isQris ? (
+          <div>
+            <label className="mb-1 block text-xs font-medium text-muted">Gambar QR Code</label>
+            {qrPreview && <img src={qrPreview} alt="QR code" className="mb-2 h-32 w-32 rounded-lg border border-border object-contain bg-white p-1" />}
+            <Input type="file" accept="image/*" onChange={handleQrUpload} />
+            <p className="mt-1 text-[11px] text-muted">
+              Upload screenshot QRIS statis dari GoPay/ShopeePay/OVO/DANA/Bank — satu QR biasanya bisa dipindai semua e-wallet.
+            </p>
+            <label className="mb-1 mt-2 block text-xs font-medium text-muted">Nomor/ID (opsional)</label>
+            <Input value={newAccount.nomor} onChange={(e) => setNewAccount({ ...newAccount, nomor: e.target.value })} placeholder="Opsional, misal ID merchant" />
+          </div>
+        ) : (
+          <Input value={newAccount.nomor} onChange={(e) => setNewAccount({ ...newAccount, nomor: e.target.value })} placeholder="Nomor rekening / HP" />
+        )}
         <Input value={newAccount.atasNama} onChange={(e) => setNewAccount({ ...newAccount, atasNama: e.target.value })} placeholder="Atas nama" />
         <Button onClick={handleAddAccount}>+ Tambah Rekening</Button>
       </div>

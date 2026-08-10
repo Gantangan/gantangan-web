@@ -2,7 +2,7 @@
 // Penting supaya foto dari kamera HP (biasanya 2-8MB) tidak bikin localStorage
 // penuh — logo cukup kecil (dipakai maksimal ~64px di layar), jadi kita batasi
 // dimensinya ke maxSize piksel dan kompres ke format JPEG kualitas sedang.
-export function compressImage(file, { maxSize = 400, quality = 0.85 } = {}) {
+export function compressImage(file, { maxSize = 400, quality = 0.85, format = "jpeg" } = {}) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error("Gagal membaca file gambar."));
@@ -25,7 +25,8 @@ export function compressImage(file, { maxSize = 400, quality = 0.85 } = {}) {
         canvas.height = height;
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL("image/jpeg", quality));
+        const mime = format === "png" ? "image/png" : "image/jpeg";
+        resolve(canvas.toDataURL(mime, quality));
       };
       img.src = reader.result;
     };
