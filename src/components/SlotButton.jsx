@@ -12,7 +12,7 @@ export default function SlotButton({ slot, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className={`aspect-square rounded-lg border-2 font-mono text-sm font-bold transition-transform hover:scale-105 ${STATUS_BG[slot.status]}`}
+      className={`aspect-square min-h-[3.25rem] min-w-[3.25rem] rounded-xl border-2 font-mono text-base font-bold transition-transform active:scale-95 hover:scale-105 ${STATUS_BG[slot.status]}`}
       title={`Nomor ${slot.no} — ${slot.status}`}
     >
       {slot.no}

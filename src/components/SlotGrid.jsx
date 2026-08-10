@@ -33,10 +33,10 @@ export default function SlotGrid({ slots, onSlotClick }) {
 
   return (
     <div
-      className="grid gap-2"
+      className="grid gap-2.5"
       style={{
-        gridTemplateColumns: `repeat(${numColumns}, minmax(2.75rem, 1fr))`,
-        gridTemplateRows: `repeat(${SLOT_ROWS_PER_COLUMN}, minmax(2.75rem, 1fr))`,
+        gridTemplateColumns: `repeat(${numColumns}, minmax(3.25rem, 1fr))`,
+        gridTemplateRows: `repeat(${SLOT_ROWS_PER_COLUMN}, minmax(3.25rem, 1fr))`,
       }}
     >
       {positions.map(({ no, row, col }) => {
