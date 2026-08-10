@@ -56,9 +56,11 @@ export function SettingsProvider({ children }) {
     [paymentAccounts]
   );
 
-  const setLogo = useCallback((dataUrl) => {
+  const setLogo = useCallback(async (dataUrl) => {
     setLogoState(dataUrl);
-    setItem("logo", dataUrl);
+    const ok = await setItem("logo", dataUrl);
+    if (!ok) setLogoState((await getItem("logo", null)) || null); // rollback tampilan kalau gagal simpan
+    return ok;
   }, []);
 
   const removeLogo = useCallback(() => {

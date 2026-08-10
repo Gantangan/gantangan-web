@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PaymentCard from "@/components/PaymentCard";
 import Logo from "@/components/Logo";
+import { compressImage } from "@/utils/image";
 import { useSettings } from "@/hooks/useSettings";
 import { useToast } from "@/components/Toast";
 
@@ -85,19 +86,29 @@ function LogoSection() {
   const { logo, setLogo, removeLogo } = useSettings();
   const showToast = useToast();
 
-  function handleLogoUpload(e) {
+  async function handleLogoUpload(e) {
     const file = e.target.files?.[0];
+    e.target.value = ""; // reset biar bisa upload file yang sama lagi kalau perlu
     if (!file) return;
-    if (file.size > 1024 * 1024) {
-      showToast("error", "Ukuran gambar maksimal 1MB.");
+    if (!file.type.startsWith("image/")) {
+      showToast("error", "File harus berupa gambar (JPG/PNG).");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setLogo(reader.result);
+    if (file.size > 8 * 1024 * 1024) {
+      showToast("error", "Ukuran file terlalu besar (maksimal 8MB). Coba foto lain atau kompres dulu.");
+      return;
+    }
+    try {
+      const compressed = await compressImage(file, { maxSize: 400, quality: 0.85 });
+      const ok = await setLogo(compressed);
+      if (ok === false) {
+        showToast("error", "Gagal menyimpan logo — penyimpanan browser penuh. Coba pakai gambar yang lebih kecil.");
+        return;
+      }
       showToast("ok", "Logo berhasil diganti.");
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      showToast("error", err.message || "Gagal memproses gambar. Coba file lain.");
+    }
   }
 
   return (
