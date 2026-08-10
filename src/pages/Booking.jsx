@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, LayoutDashboard } from "lucide-react";
 import Header from "@/components/Header";
 import SlotGrid from "@/components/SlotGrid";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,24 @@ export default function Booking() {
 
   return (
     <div className="min-h-screen bg-cream">
-      <Header subtitle={currentUser ? `${currentUser.role === "admin" ? "Panitia" : "Peserta"} — ${currentUser.nama}` : "Pilih Nomor"} />
+      <Header
+        subtitle={currentUser ? `${currentUser.role === "admin" ? "Panitia" : "Peserta"} — ${currentUser.nama}` : "Pilih Nomor"}
+        actions={
+          currentUser?.role === "admin" ? (
+            <Link to="/admin">
+              <Button variant="ghost" size="sm" className="border-inkSoft text-cream">
+                <LayoutDashboard className="mr-1 h-3.5 w-3.5" /> Panel Admin
+              </Button>
+            </Link>
+          ) : currentUser?.role === "peserta" ? (
+            <Link to="/dashboard">
+              <Button variant="ghost" size="sm" className="border-inkSoft text-cream">
+                <LayoutDashboard className="mr-1 h-3.5 w-3.5" /> Dashboard
+              </Button>
+            </Link>
+          ) : null
+        }
+      />
 
       {!cat ? (
         <main className="px-5 py-6">
