@@ -10,6 +10,7 @@ export function SettingsProvider({ children }) {
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [logo, setLogoState] = useState(null); // data URL gambar logo, atau null kalau belum diatur
   const [headerColor, setHeaderColorState] = useState(DEFAULT_HEADER_COLOR);
+  const [heroImage, setHeroImageState] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -18,6 +19,7 @@ export function SettingsProvider({ children }) {
       setPaymentAccounts((await getItem("paymentAccounts", null)) || []);
       setLogoState((await getItem("logo", null)) || null);
       setHeaderColorState((await getItem("headerColor", null)) || DEFAULT_HEADER_COLOR);
+      setHeroImageState((await getItem("heroImage", null)) || null);
       setLoaded(true);
     })();
   }, []);
@@ -82,6 +84,18 @@ export function SettingsProvider({ children }) {
     setItem("headerColor", DEFAULT_HEADER_COLOR);
   }, []);
 
+  const setHeroImage = useCallback(async (dataUrl) => {
+    setHeroImageState(dataUrl);
+    const ok = await setItem("heroImage", dataUrl);
+    if (!ok) setHeroImageState((await getItem("heroImage", null)) || null);
+    return ok;
+  }, []);
+
+  const removeHeroImage = useCallback(() => {
+    setHeroImageState(null);
+    setItem("heroImage", null);
+  }, []);
+
   return (
     <SettingsContext.Provider
       value={{
@@ -89,6 +103,7 @@ export function SettingsProvider({ children }) {
         paymentAccounts,
         logo,
         headerColor,
+        heroImage,
         loaded,
         addAnnouncement,
         removeAnnouncement,
@@ -98,6 +113,8 @@ export function SettingsProvider({ children }) {
         removeLogo,
         setHeaderColor,
         resetHeaderColor,
+        setHeroImage,
+        removeHeroImage,
       }}
     >
       {children}

@@ -135,15 +135,43 @@ function LogoSection() {
 }
 
 function TampilanSection() {
-  const { headerColor, setHeaderColor, resetHeaderColor } = useSettings();
+  const { headerColor, setHeaderColor, resetHeaderColor, heroImage, setHeroImage, removeHeroImage } = useSettings();
+  const showToast = useToast();
+
+  async function handleHeroUpload(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showToast("error", "File harus berupa gambar (JPG/PNG).");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      showToast("error", "Ukuran file terlalu besar (maksimal 10MB).");
+      return;
+    }
+    try {
+      const compressed = await compressImage(file, { maxSize: 1600, quality: 0.85 });
+      const ok = await setHeroImage(compressed);
+      if (ok === false) {
+        showToast("error", "Gagal menyimpan gambar — penyimpanan browser penuh. Coba gambar yang lebih kecil.");
+        return;
+      }
+      showToast("ok", "Gambar hero banner berhasil diganti.");
+    } catch (err) {
+      showToast("error", err.message || "Gagal memproses gambar. Coba file lain.");
+    }
+  }
 
   return (
     <section>
       <h2 className="font-display text-base font-bold">Tampilan</h2>
       <p className="mt-1 text-xs text-muted">
-        Warna latar header, hero (Landing Page), dan sidebar admin. Bisa diganti kapan saja.
+        Warna &amp; gambar latar header, hero (Landing Page), dan sidebar admin. Bisa diganti kapan saja.
       </p>
-      <div className="mt-3 flex items-center gap-4">
+
+      <h3 className="mt-4 text-sm font-bold text-ink">Warna Latar</h3>
+      <div className="mt-2 flex items-center gap-4">
         <input
           type="color"
           value={headerColor}
@@ -167,6 +195,25 @@ function TampilanSection() {
       <p className="mt-2 text-[11px] text-muted">
         Tips: pilih warna yang cukup gelap supaya tulisan putih di atasnya tetap jelas terbaca.
       </p>
+
+      <h3 className="mt-5 text-sm font-bold text-ink">Gambar Hero Banner (Landing Page)</h3>
+      <p className="mt-1 text-[11px] text-muted">
+        Kalau diisi, gambar ini menggantikan warna solid khusus di banner besar paling atas Landing Page (bukan
+        header halaman lain). Ukuran ideal <strong>1600 × 600 piksel</strong> (banner memanjang, rasio ~8:3), format
+        JPG/PNG. Gambar menyesuaikan lebar layar secara otomatis — kalau rasio layar jauh beda dari itu, bagian
+        atas/bawah bisa sedikit terpotong, jadi taruh bagian penting foto di tengah.
+      </p>
+      {heroImage && (
+        <img src={heroImage} alt="Preview hero banner" className="mt-2 h-24 w-full rounded-lg border border-border object-cover" />
+      )}
+      <div className="mt-2 flex flex-col gap-1">
+        <Input type="file" accept="image/*" onChange={handleHeroUpload} />
+        {heroImage && (
+          <button onClick={removeHeroImage} className="self-start text-xs text-red-700">
+            ✕ Hapus gambar (kembali ke warna solid)
+          </button>
+        )}
+      </div>
     </section>
   );
 }

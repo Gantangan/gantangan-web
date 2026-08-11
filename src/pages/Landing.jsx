@@ -11,7 +11,7 @@ import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
 
 export default function Landing() {
   const { categories, board, getHarga, getJadwal, getSlotCount, loaded } = useBooking();
-  const { headerColor } = useSettings();
+  const { headerColor, heroImage } = useSettings();
   const [, forceTick] = useState(0);
 
   // Refresh tiap menit biar countdown tetap akurat.
@@ -42,8 +42,14 @@ export default function Landing() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col items-center px-6 pb-8 pt-10 text-center text-cream"
-        style={{ background: `linear-gradient(to bottom right, ${headerColor}, ${headerColor}dd)` }}
+        className="relative flex flex-col items-center overflow-hidden px-6 pb-8 pt-10 text-center text-cream bg-cover bg-center"
+        style={{
+          background: heroImage
+            ? `linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url(${heroImage})`
+            : `linear-gradient(to bottom right, ${headerColor}, ${headerColor}dd)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
         <Logo size={56} className="mb-3" />
         <div className="mb-2 font-mono text-xs tracking-[0.3em] text-gold">◈ GANTANGAN KEBOKICAK</div>
