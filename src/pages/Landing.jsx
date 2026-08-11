@@ -5,11 +5,13 @@ import { CalendarDays } from "lucide-react";
 import Ticker from "@/components/Ticker";
 import Logo from "@/components/Logo";
 import { useBooking } from "@/hooks/useBooking";
+import { useSettings } from "@/hooks/useSettings";
 import { formatRupiah } from "@/utils/format";
 import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
 
 export default function Landing() {
   const { categories, board, getHarga, getJadwal, getSlotCount, loaded } = useBooking();
+  const { headerColor } = useSettings();
   const [, forceTick] = useState(0);
 
   // Refresh tiap menit biar countdown tetap akurat.
@@ -40,7 +42,8 @@ export default function Landing() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col items-center bg-gradient-to-br from-ink to-inkSoft px-6 pb-8 pt-10 text-center text-cream"
+        className="flex flex-col items-center px-6 pb-8 pt-10 text-center text-cream"
+        style={{ background: `linear-gradient(to bottom right, ${headerColor}, ${headerColor}dd)` }}
       >
         <Logo size={56} className="mb-3" />
         <div className="mb-2 font-mono text-xs tracking-[0.3em] text-gold">◈ GANTANGAN KEBOKICAK</div>

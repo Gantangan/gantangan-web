@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { Image, Landmark, Megaphone, ChevronDown } from "lucide-react";
+import { Image, Landmark, Megaphone, ChevronDown, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PaymentCard from "@/components/PaymentCard";
 import Logo from "@/components/Logo";
 import { compressImage } from "@/utils/image";
-import { useSettings } from "@/hooks/useSettings";
+import { useSettings, DEFAULT_HEADER_COLOR } from "@/hooks/useSettings";
 import { useToast } from "@/components/Toast";
 
 const SUB_TABS = [
   { id: "logo", label: "Logo", icon: Image },
+  { id: "tampilan", label: "Tampilan", icon: Palette },
   { id: "rekening", label: "Rekening Bank", icon: Landmark },
   { id: "pengumuman", label: "Pengumuman & Event", icon: Megaphone },
 ];
@@ -74,6 +75,7 @@ export default function AdminPengaturan() {
         {/* Konten sub */}
         <div className="mt-4">
           {tab === "logo" && <LogoSection />}
+          {tab === "tampilan" && <TampilanSection />}
           {tab === "rekening" && <RekeningSection />}
           {tab === "pengumuman" && <PengumumanSection />}
         </div>
@@ -128,6 +130,43 @@ function LogoSection() {
           )}
         </div>
       </div>
+    </section>
+  );
+}
+
+function TampilanSection() {
+  const { headerColor, setHeaderColor, resetHeaderColor } = useSettings();
+
+  return (
+    <section>
+      <h2 className="font-display text-base font-bold">Tampilan</h2>
+      <p className="mt-1 text-xs text-muted">
+        Warna latar header, hero (Landing Page), dan sidebar admin. Bisa diganti kapan saja.
+      </p>
+      <div className="mt-3 flex items-center gap-4">
+        <input
+          type="color"
+          value={headerColor}
+          onChange={(e) => setHeaderColor(e.target.value)}
+          className="h-14 w-14 cursor-pointer rounded-lg border border-border bg-white p-1"
+        />
+        <div className="flex flex-col gap-1">
+          <Input
+            value={headerColor}
+            onChange={(e) => setHeaderColor(e.target.value)}
+            placeholder="#2A2620"
+            className="w-32 font-mono uppercase"
+          />
+          {headerColor !== DEFAULT_HEADER_COLOR && (
+            <button onClick={resetHeaderColor} className="self-start text-xs text-red-700">
+              ✕ Kembalikan ke warna default
+            </button>
+          )}
+        </div>
+      </div>
+      <p className="mt-2 text-[11px] text-muted">
+        Tips: pilih warna yang cukup gelap supaya tulisan putih di atasnya tetap jelas terbaca.
+      </p>
     </section>
   );
 }

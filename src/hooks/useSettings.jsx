@@ -3,10 +3,13 @@ import { getItem, setItem } from "@/services/storage";
 
 const SettingsContext = createContext(null);
 
+export const DEFAULT_HEADER_COLOR = "#2A2620";
+
 export function SettingsProvider({ children }) {
   const [announcements, setAnnouncements] = useState([]);
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [logo, setLogoState] = useState(null); // data URL gambar logo, atau null kalau belum diatur
+  const [headerColor, setHeaderColorState] = useState(DEFAULT_HEADER_COLOR);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -14,6 +17,7 @@ export function SettingsProvider({ children }) {
       setAnnouncements((await getItem("announcements", null)) || []);
       setPaymentAccounts((await getItem("paymentAccounts", null)) || []);
       setLogoState((await getItem("logo", null)) || null);
+      setHeaderColorState((await getItem("headerColor", null)) || DEFAULT_HEADER_COLOR);
       setLoaded(true);
     })();
   }, []);
@@ -68,12 +72,23 @@ export function SettingsProvider({ children }) {
     setItem("logo", null);
   }, []);
 
+  const setHeaderColor = useCallback((hex) => {
+    setHeaderColorState(hex);
+    setItem("headerColor", hex);
+  }, []);
+
+  const resetHeaderColor = useCallback(() => {
+    setHeaderColorState(DEFAULT_HEADER_COLOR);
+    setItem("headerColor", DEFAULT_HEADER_COLOR);
+  }, []);
+
   return (
     <SettingsContext.Provider
       value={{
         announcements,
         paymentAccounts,
         logo,
+        headerColor,
         loaded,
         addAnnouncement,
         removeAnnouncement,
@@ -81,6 +96,8 @@ export function SettingsProvider({ children }) {
         removeAccount,
         setLogo,
         removeLogo,
+        setHeaderColor,
+        resetHeaderColor,
       }}
     >
       {children}
