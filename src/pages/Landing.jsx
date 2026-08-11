@@ -42,15 +42,27 @@ export default function Landing() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative flex flex-col items-center overflow-hidden px-6 pb-8 pt-10 text-center text-cream bg-cover bg-center"
-        style={{
-          background: heroImage
-            ? `linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url(${heroImage})`
-            : `linear-gradient(to bottom right, ${headerColor}, ${headerColor}dd)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        className="relative flex flex-col items-center overflow-hidden px-6 pb-8 pt-10 text-center text-cream"
+        style={{ backgroundColor: headerColor }}
       >
+        {heroImage && (
+          <>
+            {/* Lapisan gambar: "contain" supaya gambar utuh, tidak pernah terpotong.
+                Sisi yang tidak tertutup gambar otomatis terisi warna latar di atas. */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url(${heroImage})`,
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+              }}
+            />
+            {/* Overlay gelap tipis di atas gambar biar teks putih tetap kebaca */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/55" />
+          </>
+        )}
+        <div className="relative z-10 flex flex-col items-center">
         <Logo size={56} className="mb-3" />
         <div className="mb-2 font-mono text-xs tracking-[0.3em] text-gold">◈ GANTANGAN KEBOKICAK</div>
         <h1 className="font-display text-3xl font-bold leading-tight">Lomba Burung Berkicau</h1>
@@ -84,6 +96,7 @@ export default function Landing() {
         <Link to="/cek-pesanan" className="mt-3 text-xs font-semibold text-gold underline underline-offset-2">
           Sudah booking? Cek status pesanan
         </Link>
+        </div>
       </motion.section>
 
       <Ticker items={[]} />
