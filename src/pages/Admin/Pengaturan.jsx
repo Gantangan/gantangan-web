@@ -151,7 +151,7 @@ function TampilanSection() {
       return;
     }
     try {
-      const compressed = await compressImage(file, { maxSize: 1200, quality: 0.85 });
+      const compressed = await compressImage(file, { maxSize: 1600, quality: 0.85 });
       const ok = await setHeroImage(compressed);
       if (ok === false) {
         showToast("error", "Gagal menyimpan gambar — penyimpanan browser penuh. Coba gambar yang lebih kecil.");
@@ -199,7 +199,7 @@ function TampilanSection() {
       <h3 className="mt-5 text-sm font-bold text-ink">Gambar Hero Banner (Landing Page)</h3>
       <p className="mt-1 text-[11px] text-muted">
         Kalau diisi, gambar ini menggantikan warna solid khusus di banner besar paling atas Landing Page (bukan
-        header halaman lain). Ukuran ideal <strong>1200 × 800 piksel</strong> (rasio 3:2, lebih persegi biar seimbang di HP maupun laptop), format
+        header halaman lain). Ukuran ideal <strong>1600 × 900 piksel</strong> (rasio 16:9, standar umum banner web), format
         JPG/PNG. Gambar menyesuaikan lebar layar secara otomatis — kalau rasio layar jauh beda dari itu, bagian
         atas/bawah bisa sedikit terpotong, jadi taruh bagian penting foto di tengah.
       </p>

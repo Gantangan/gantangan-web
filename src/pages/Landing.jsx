@@ -45,7 +45,7 @@ export default function Landing() {
         className="relative flex w-full flex-col items-center justify-center px-6 py-10 text-center text-cream"
         style={{
           backgroundColor: headerColor,
-          aspectRatio: heroImage ? "3 / 2" : undefined, // 1200x800 = rasio 3:2, sama persis dengan rekomendasi upload
+          aspectRatio: heroImage ? "16 / 9" : undefined, // 1600x900 = rasio 16:9, standar umum banner web
           minHeight: heroImage ? undefined : "auto",
         }}
       >
