@@ -42,24 +42,27 @@ export default function Landing() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative flex flex-col items-center overflow-hidden px-6 pb-8 pt-10 text-center text-cream"
-        style={{ backgroundColor: headerColor }}
+        className="relative flex w-full flex-col items-center justify-center px-6 py-10 text-center text-cream"
+        style={{
+          backgroundColor: headerColor,
+          aspectRatio: heroImage ? "3 / 2" : undefined, // 1200x800 = rasio 3:2, sama persis dengan rekomendasi upload
+          minHeight: heroImage ? undefined : "auto",
+        }}
       >
         {heroImage && (
           <>
-            {/* Lapisan gambar: "contain" supaya gambar utuh, tidak pernah terpotong.
-                Sisi yang tidak tertutup gambar otomatis terisi warna latar di atas. */}
+            {/* Kotak section ini sengaja dibuat rasio 3:2 (1200x800) supaya gambar
+                pas mengisi penuh tanpa potong dan tanpa sisa ruang kosong. */}
             <div
               className="absolute inset-0"
               style={{
                 backgroundImage: `url(${heroImage})`,
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
             />
             {/* Overlay gelap tipis di atas gambar biar teks putih tetap kebaca */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/55" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/55" />
           </>
         )}
         <div className="relative z-10 flex flex-col items-center">
