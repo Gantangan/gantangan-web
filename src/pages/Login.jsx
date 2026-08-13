@@ -5,6 +5,7 @@ import { useToast } from "@/components/Toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import AuthLayout from "@/components/AuthLayout";
 
 export default function Login() {
   const { login } = useAuth();
@@ -32,7 +33,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-cream px-4">
+    <AuthLayout>
       <Card className="w-full max-w-sm p-6">
         <div className="mb-4 flex rounded-lg bg-cream p-1">
           <button
@@ -85,6 +86,6 @@ export default function Login() {
           ← Kembali ke beranda
         </Link>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }

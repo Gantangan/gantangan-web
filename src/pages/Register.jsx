@@ -5,6 +5,7 @@ import { useToast } from "@/components/Toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import AuthLayout from "@/components/AuthLayout";
 
 export default function Register() {
   const { register } = useAuth();
@@ -30,7 +31,7 @@ export default function Register() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-cream px-4">
+    <AuthLayout>
       <Card className="w-full max-w-sm p-6">
         <h1 className="font-display text-xl font-bold">Daftar Akun Peserta</h1>
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
@@ -68,6 +69,6 @@ export default function Register() {
           ← Kembali ke beranda
         </Link>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }
