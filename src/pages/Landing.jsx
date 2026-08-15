@@ -106,6 +106,72 @@ export default function Landing() {
 
       <Ticker items={[]} />
 
+      {posts.length > 0 && (
+        <section className="border-b border-border bg-card px-5 py-7">
+          <div className="mx-auto max-w-4xl">
+            <div className="flex items-center justify-between border-b-2 border-ink pb-2">
+              <h2 className="font-display text-xl font-bold uppercase tracking-wide text-ink">
+                📰 Kegiatan &amp; Update
+              </h2>
+              <Link to="/berita" className="text-xs font-bold text-goldDeep hover:underline">
+                Semua Berita →
+              </Link>
+            </div>
+
+            <div className="mt-4 grid gap-5 sm:grid-cols-5">
+              {/* Berita utama — kolom besar, gaya headline portal berita */}
+              <Link to={`/berita/${posts[0].id}`} className="group block sm:col-span-3">
+                <div className="overflow-hidden rounded-card">
+                  {posts[0].image ? (
+                    <img
+                      src={posts[0].image}
+                      alt={posts[0].title}
+                      className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:h-72"
+                    />
+                  ) : (
+                    <div className="h-52 w-full bg-ink/10 sm:h-72" />
+                  )}
+                </div>
+                <span className="mt-3 inline-block rounded bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink">
+                  Terbaru
+                </span>
+                <h3 className="mt-2 font-display text-xl font-bold leading-snug text-ink group-hover:text-goldDeep sm:text-2xl">
+                  {posts[0].title}
+                </h3>
+                {posts[0].excerpt && <p className="mt-1.5 line-clamp-2 text-sm text-inkSoft">{posts[0].excerpt}</p>}
+                <div className="mt-2 flex items-center gap-1 text-[11px] font-medium text-muted">
+                  <CalendarDays className="h-3 w-3" />
+                  {new Date(posts[0].createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+                </div>
+              </Link>
+
+              {/* Berita lainnya — list editorial: thumbnail kecil kiri, teks kanan */}
+              {posts.length > 1 && (
+                <div className="flex flex-col divide-y divide-border sm:col-span-2">
+                  {posts.slice(1, 5).map((p) => (
+                    <Link key={p.id} to={`/berita/${p.id}`} className="group flex gap-3 py-3 first:pt-0">
+                      {p.image ? (
+                        <img src={p.image} alt={p.title} className="h-16 w-20 shrink-0 rounded-lg object-cover" />
+                      ) : (
+                        <div className="h-16 w-20 shrink-0 rounded-lg bg-ink/10" />
+                      )}
+                      <div className="min-w-0">
+                        <h4 className="font-display text-sm font-bold leading-snug text-ink line-clamp-2 group-hover:text-goldDeep">
+                          {p.title}
+                        </h4>
+                        <div className="mt-1 text-[10.5px] text-muted">
+                          {new Date(p.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" })}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
       <main className="px-5 py-6">
         <h2 className="font-display text-2xl font-bold">Kategori Lomba</h2>
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -127,35 +193,6 @@ export default function Landing() {
             );
           })}
         </div>
-
-        {posts.length > 0 && (
-          <>
-            <div className="mt-8 flex items-center justify-between">
-              <h2 className="font-display text-2xl font-bold">Kegiatan &amp; Update</h2>
-              <Link to="/berita" className="text-xs font-semibold text-goldDeep underline">
-                Lihat Semua
-              </Link>
-            </div>
-            <div className="mt-4 flex flex-col gap-3">
-              {posts.slice(0, 3).map((p) => (
-                <Link key={p.id} to={`/berita/${p.id}`} className="flex gap-3 rounded-card border border-border bg-card p-3 hover:bg-white">
-                  {p.image ? (
-                    <img src={p.image} alt={p.title} className="h-16 w-20 shrink-0 rounded-lg object-cover" />
-                  ) : (
-                    <div className="h-16 w-20 shrink-0 rounded-lg bg-cream" />
-                  )}
-                  <div className="min-w-0">
-                    <div className="font-display text-sm font-bold text-ink line-clamp-1">{p.title}</div>
-                    <div className="mt-0.5 text-[11px] text-muted">
-                      {new Date(p.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
-                    </div>
-                    {p.excerpt && <p className="mt-1 line-clamp-1 text-xs text-inkSoft">{p.excerpt}</p>}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
-        )}
 
         <div className="mt-8 text-center">
           <Link to="/login" className="rounded-full bg-ink px-5 py-2.5 text-xs font-semibold text-cream">
