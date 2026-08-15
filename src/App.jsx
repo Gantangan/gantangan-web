@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth.jsx";
 import { BookingProvider } from "@/hooks/useBooking";
 import { SettingsProvider } from "@/hooks/useSettings";
+import { PostsProvider } from "@/hooks/usePosts";
 import { ToastProvider } from "@/components/Toast";
 
 import Landing from "@/pages/Landing";
@@ -10,6 +11,8 @@ import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Booking from "@/pages/Booking";
 import CekPesanan from "@/pages/CekPesanan";
+import Berita from "@/pages/Berita";
+import BeritaDetail from "@/pages/BeritaDetail";
 import Riwayat from "@/pages/Riwayat";
 import Settings from "@/pages/Settings";
 import Admin from "@/pages/Admin";
@@ -20,6 +23,7 @@ import AdminPeserta from "@/pages/Admin/Peserta";
 import AdminPembayaran from "@/pages/Admin/Pembayaran";
 import AdminLaporan from "@/pages/Admin/Laporan";
 import AdminPengaturan from "@/pages/Admin/Pengaturan";
+import AdminPostingan from "@/pages/Admin/Postingan";
 
 function PrivateRoute({ children, role }) {
   const { currentUser, loaded } = useAuth();
@@ -34,6 +38,7 @@ export default function App() {
     <AuthProvider>
       <BookingProvider>
         <SettingsProvider>
+          <PostsProvider>
           <ToastProvider>
             <BrowserRouter>
               <Routes>
@@ -42,6 +47,8 @@ export default function App() {
                 <Route path="/daftar" element={<Register />} />
                 <Route path="/booking" element={<Booking />} />
                 <Route path="/cek-pesanan" element={<CekPesanan />} />
+                <Route path="/berita" element={<Berita />} />
+                <Route path="/berita/:id" element={<BeritaDetail />} />
                 <Route
                   path="/dashboard"
                   element={
@@ -81,11 +88,13 @@ export default function App() {
                   <Route path="pembayaran" element={<AdminPembayaran />} />
                   <Route path="laporan" element={<AdminLaporan />} />
                   <Route path="pengaturan" element={<AdminPengaturan />} />
+                  <Route path="postingan" element={<AdminPostingan />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </BrowserRouter>
           </ToastProvider>
+          </PostsProvider>
         </SettingsProvider>
       </BookingProvider>
     </AuthProvider>

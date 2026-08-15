@@ -6,12 +6,14 @@ import Ticker from "@/components/Ticker";
 import Logo from "@/components/Logo";
 import { useBooking } from "@/hooks/useBooking";
 import { useSettings } from "@/hooks/useSettings";
+import { usePosts } from "@/hooks/usePosts";
 import { formatRupiah } from "@/utils/format";
 import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
 
 export default function Landing() {
   const { categories, board, getHarga, getJadwal, getSlotCount, loaded } = useBooking();
   const { headerColor, heroImage } = useSettings();
+  const { posts } = usePosts();
   const [, forceTick] = useState(0);
 
   // Refresh tiap menit biar countdown tetap akurat.
@@ -125,6 +127,35 @@ export default function Landing() {
             );
           })}
         </div>
+
+        {posts.length > 0 && (
+          <>
+            <div className="mt-8 flex items-center justify-between">
+              <h2 className="font-display text-2xl font-bold">Kegiatan &amp; Update</h2>
+              <Link to="/berita" className="text-xs font-semibold text-goldDeep underline">
+                Lihat Semua
+              </Link>
+            </div>
+            <div className="mt-4 flex flex-col gap-3">
+              {posts.slice(0, 3).map((p) => (
+                <Link key={p.id} to={`/berita/${p.id}`} className="flex gap-3 rounded-card border border-border bg-card p-3 hover:bg-white">
+                  {p.image ? (
+                    <img src={p.image} alt={p.title} className="h-16 w-20 shrink-0 rounded-lg object-cover" />
+                  ) : (
+                    <div className="h-16 w-20 shrink-0 rounded-lg bg-cream" />
+                  )}
+                  <div className="min-w-0">
+                    <div className="font-display text-sm font-bold text-ink line-clamp-1">{p.title}</div>
+                    <div className="mt-0.5 text-[11px] text-muted">
+                      {new Date(p.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+                    </div>
+                    {p.excerpt && <p className="mt-1 line-clamp-1 text-xs text-inkSoft">{p.excerpt}</p>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
 
         <div className="mt-8 text-center">
           <Link to="/login" className="rounded-full bg-ink px-5 py-2.5 text-xs font-semibold text-cream">
