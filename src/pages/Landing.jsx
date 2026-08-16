@@ -173,6 +173,28 @@ export default function Landing() {
       )}
 
       <main className="px-5 py-6">
+        {photos.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <h2 className="font-display text-2xl font-bold">Galeri Foto</h2>
+              <Link to="/galeri" className="text-xs font-semibold text-goldDeep underline">
+                Lihat semua
+              </Link>
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
+              {photos.slice(0, 8).map((p) => (
+                <Link key={p.id} to="/galeri" className="group overflow-hidden rounded-lg border border-border">
+                  <img
+                    src={p.image}
+                    alt={p.caption || "Foto galeri"}
+                    className="aspect-square w-full object-cover transition-transform group-hover:scale-105"
+                  />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <h2 className="font-display text-2xl font-bold">Kategori Lomba</h2>
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {categories.map((c) => {

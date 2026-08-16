@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth.jsx";
 import { BookingProvider } from "@/hooks/useBooking";
 import { SettingsProvider } from "@/hooks/useSettings";
 import { PostsProvider } from "@/hooks/usePosts";
+import { PhotosProvider } from "@/hooks/usePhotos";
 import { ToastProvider } from "@/components/Toast";
 
 import Landing from "@/pages/Landing";
@@ -13,6 +14,7 @@ import Booking from "@/pages/Booking";
 import CekPesanan from "@/pages/CekPesanan";
 import Berita from "@/pages/Berita";
 import BeritaDetail from "@/pages/BeritaDetail";
+import Galeri from "@/pages/Galeri";
 import Riwayat from "@/pages/Riwayat";
 import Settings from "@/pages/Settings";
 import Admin from "@/pages/Admin";
@@ -24,6 +26,7 @@ import AdminPembayaran from "@/pages/Admin/Pembayaran";
 import AdminLaporan from "@/pages/Admin/Laporan";
 import AdminPengaturan from "@/pages/Admin/Pengaturan";
 import AdminPostingan from "@/pages/Admin/Postingan";
+import AdminGaleri from "@/pages/Admin/Galeri";
 
 function PrivateRoute({ children, role }) {
   const { currentUser, loaded } = useAuth();
@@ -39,6 +42,7 @@ export default function App() {
       <BookingProvider>
         <SettingsProvider>
           <PostsProvider>
+          <PhotosProvider>
           <ToastProvider>
             <BrowserRouter>
               <Routes>
@@ -49,6 +53,7 @@ export default function App() {
                 <Route path="/cek-pesanan" element={<CekPesanan />} />
                 <Route path="/berita" element={<Berita />} />
                 <Route path="/berita/:id" element={<BeritaDetail />} />
+                <Route path="/galeri" element={<Galeri />} />
                 <Route
                   path="/dashboard"
                   element={
@@ -89,11 +94,13 @@ export default function App() {
                   <Route path="laporan" element={<AdminLaporan />} />
                   <Route path="pengaturan" element={<AdminPengaturan />} />
                   <Route path="postingan" element={<AdminPostingan />} />
+                  <Route path="galeri" element={<AdminGaleri />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </BrowserRouter>
           </ToastProvider>
+          </PhotosProvider>
           </PostsProvider>
         </SettingsProvider>
       </BookingProvider>
