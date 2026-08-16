@@ -7,6 +7,7 @@ import Logo from "@/components/Logo";
 import { useBooking } from "@/hooks/useBooking";
 import { useSettings } from "@/hooks/useSettings";
 import { usePosts } from "@/hooks/usePosts";
+import { usePhotos } from "@/hooks/usePhotos";
 import { formatRupiah } from "@/utils/format";
 import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
 
@@ -14,6 +15,7 @@ export default function Landing() {
   const { categories, board, getHarga, getJadwal, getSlotCount, loaded } = useBooking();
   const { headerColor, heroImage } = useSettings();
   const { posts } = usePosts();
+  const { photos } = usePhotos();
   const [, forceTick] = useState(0);
 
   // Refresh tiap menit biar countdown tetap akurat.
