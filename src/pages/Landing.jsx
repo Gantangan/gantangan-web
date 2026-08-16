@@ -198,24 +198,17 @@ export default function Landing() {
         )}
 
         <h2 className="font-display text-2xl font-bold">Kategori Lomba</h2>
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {categories.map((c) => {
-            const jadwal = getJadwal(c.id);
-            const count = board[c.id] ? board[c.id].filter((s) => s.status !== "kosong").length : 0;
-            return (
-              <div key={c.id} className="rounded-2xl border-2 bg-card p-4" style={{ borderColor: c.tagColor }}>
-                <span className="mb-1 inline-block h-3.5 w-3.5 rounded-full" style={{ background: c.tagColor }} />
-                <div className="font-display font-bold">{c.name}</div>
-                <div className="font-mono text-xs text-muted">{count}/{getSlotCount(c.id)} terisi</div>
-                <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
-                {jadwal && (
-                  <div className="mt-1 flex items-center gap-1 text-[11px] text-inkSoft">
-                    <CalendarDays className="h-3 w-3" /> {HARI_LABEL[new Date(jadwal + "T00:00:00").getDay()]}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        <div className="mt-4 grid grid-cols-3 gap-2.5 sm:grid-cols-4">
+          {categories.map((c) => (
+            <div
+              key={c.id}
+              className="flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 bg-card px-2 py-4 text-center"
+              style={{ borderColor: c.tagColor }}
+            >
+              <span className="h-3 w-3 rounded-full" style={{ background: c.tagColor }} />
+              <div className="font-display text-sm font-bold leading-tight">{c.name}</div>
+            </div>
+          ))}
         </div>
 
         <div className="mt-8 text-center">
