@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import { AuthProvider, useAuth } from "@/hooks/useAuth.jsx";
 import { BookingProvider } from "@/hooks/useBooking";
 import { SettingsProvider } from "@/hooks/useSettings";
@@ -99,6 +100,7 @@ export default function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </BrowserRouter>
+            <Analytics />
           </ToastProvider>
           </PhotosProvider>
           </PostsProvider>
