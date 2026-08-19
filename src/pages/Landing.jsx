@@ -183,9 +183,9 @@ export default function Landing() {
                 Lihat semua
               </Link>
             </div>
-            <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {photos.slice(0, 8).map((p) => (
-                <Link key={p.id} to="/galeri" className="group overflow-hidden rounded-lg border border-border">
+            <div className="mt-4 grid grid-cols-4 gap-1.5 sm:grid-cols-6">
+              {photos.slice(0, 12).map((p) => (
+                <Link key={p.id} to="/galeri" className="group overflow-hidden rounded-md border border-border">
                   <img
                     src={p.image}
                     alt={p.caption || "Foto galeri"}
