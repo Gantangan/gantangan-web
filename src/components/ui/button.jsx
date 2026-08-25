@@ -10,7 +10,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-ink text-cream hover:bg-inkSoft",
         primary: "bg-gold text-ink hover:brightness-95",
-        ghost: "bg-transparent border border-border text-ink hover:bg-card",
+        ghost: "bg-transparent border border-border text-cream hover:bg-card",
         destructive: "bg-red-700 text-white hover:bg-red-800",
         success: "bg-emerald-700 text-white hover:bg-emerald-800",
         link: "text-goldDeep underline-offset-4 hover:underline",

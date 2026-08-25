@@ -6,7 +6,7 @@ const ICONS = { Bank: Landmark, "E-Wallet": Smartphone, QRIS: QrCode };
 export default function PaymentCard({ account, onRemove }) {
   const Icon = ICONS[account.jenis] || Landmark;
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-white px-3 py-2.5 text-sm">
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 py-2.5 text-sm">
       <div className="flex items-center gap-2.5">
         {account.qrImage ? (
           <img src={account.qrImage} alt="QR code" className="h-10 w-10 rounded border border-border object-contain bg-white" />

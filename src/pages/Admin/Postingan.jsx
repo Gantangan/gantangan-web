@@ -76,7 +76,7 @@ export default function AdminPostingan() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-ink">Postingan</h1>
+        <h1 className="font-display text-2xl font-bold text-cream">Postingan</h1>
         {editingId === null && (
           <Button onClick={openNew}>
             <Plus className="mr-1 h-4 w-4" /> Postingan Baru
@@ -116,7 +116,7 @@ export default function AdminPostingan() {
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
                 rows={6}
-                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold"
+                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-cream focus:outline-none focus:ring-2 focus:ring-gold"
                 placeholder="Ceritakan kegiatan, suasana gantangan, hasil lomba, dsb."
               />
             </div>
@@ -132,16 +132,16 @@ export default function AdminPostingan() {
             {p.image ? (
               <img src={p.image} alt={p.title} className="h-14 w-14 shrink-0 rounded-lg object-cover" />
             ) : (
-              <div className="h-14 w-14 shrink-0 rounded-lg bg-cream" />
+              <div className="h-14 w-14 shrink-0 rounded-lg bg-card" />
             )}
             <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-bold text-ink">{p.title}</div>
+              <div className="truncate text-sm font-bold text-cream">{p.title}</div>
               <div className="text-[11px] text-muted">{new Date(p.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</div>
             </div>
-            <button onClick={() => openEdit(p)} className="shrink-0 rounded-lg p-2 text-muted hover:bg-cream">
+            <button onClick={() => openEdit(p)} className="shrink-0 rounded-lg p-2 text-muted hover:bg-card">
               <Pencil className="h-4 w-4" />
             </button>
-            <button onClick={() => handleDelete(p.id)} className="shrink-0 rounded-lg p-2 text-red-700 hover:bg-cream">
+            <button onClick={() => handleDelete(p.id)} className="shrink-0 rounded-lg p-2 text-red-700 hover:bg-card">
               <Trash2 className="h-4 w-4" />
             </button>
           </div>

@@ -22,7 +22,7 @@ export default function Sidebar() {
 
   const itemClass = ({ isActive }) =>
     `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-      isActive ? "bg-gold font-bold text-ink" : "text-border hover:bg-white/10"
+      isActive ? "bg-gold font-bold text-ink" : "text-textSoft hover:bg-white/10"
     } md:flex-row md:text-sm max-md:flex-col max-md:text-[9.5px] max-md:px-2 max-md:py-1.5 max-md:whitespace-nowrap`;
 
   return (

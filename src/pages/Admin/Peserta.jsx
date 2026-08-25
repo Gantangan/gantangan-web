@@ -20,7 +20,7 @@ export default function AdminPeserta() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-ink">Peserta ({peserta.length})</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Peserta ({peserta.length})</h1>
       <div className="mt-4 overflow-x-auto rounded-card border border-border bg-card">
         <table className="w-full text-sm">
           <thead>

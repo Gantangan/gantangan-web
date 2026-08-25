@@ -38,14 +38,14 @@ export default function AdminPengaturan() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-ink">Pengaturan</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Pengaturan</h1>
 
       <div className="mt-5 max-w-md">
         {/* Sub-navigasi: tombol dropdown yang auto-hide */}
         <div ref={navRef} className="relative">
           <button
             onClick={() => setNavOpen((o) => !o)}
-            className="flex w-full items-center justify-between gap-2 rounded-card border border-border bg-white px-4 py-2.5 text-sm font-semibold text-ink shadow-sm"
+            className="flex w-full items-center justify-between gap-2 rounded-card border border-border bg-card px-4 py-2.5 text-sm font-semibold text-cream shadow-sm"
           >
             <span className="flex items-center gap-2">
               {activeTab && <activeTab.icon className="h-4 w-4 text-gold" />}
@@ -55,13 +55,13 @@ export default function AdminPengaturan() {
           </button>
 
           {navOpen && (
-            <nav className="absolute left-0 right-0 top-full z-10 mt-1 flex flex-col gap-0.5 rounded-card border border-border bg-white p-1.5 shadow-lg">
+            <nav className="absolute left-0 right-0 top-full z-10 mt-1 flex flex-col gap-0.5 rounded-card border border-border bg-card p-1.5 shadow-lg">
               {SUB_TABS.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => selectTab(t.id)}
                   className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${
-                    tab === t.id ? "bg-ink text-cream" : "text-muted hover:bg-cream"
+                    tab === t.id ? "bg-ink text-cream" : "text-muted hover:bg-card"
                   }`}
                 >
                   <t.icon className="h-4 w-4 shrink-0" />
@@ -170,13 +170,13 @@ function TampilanSection() {
         Warna &amp; gambar latar header, hero (Landing Page), dan sidebar admin. Bisa diganti kapan saja.
       </p>
 
-      <h3 className="mt-4 text-sm font-bold text-ink">Warna Latar</h3>
+      <h3 className="mt-4 text-sm font-bold text-cream">Warna Latar</h3>
       <div className="mt-2 flex items-center gap-4">
         <input
           type="color"
           value={headerColor}
           onChange={(e) => setHeaderColor(e.target.value)}
-          className="h-14 w-14 cursor-pointer rounded-lg border border-border bg-white p-1"
+          className="h-14 w-14 cursor-pointer rounded-lg border border-border bg-card p-1"
         />
         <div className="flex flex-col gap-1">
           <Input
@@ -196,7 +196,7 @@ function TampilanSection() {
         Tips: pilih warna yang cukup gelap supaya tulisan putih di atasnya tetap jelas terbaca.
       </p>
 
-      <h3 className="mt-5 text-sm font-bold text-ink">Gambar Hero Banner (Landing Page)</h3>
+      <h3 className="mt-5 text-sm font-bold text-cream">Gambar Hero Banner (Landing Page)</h3>
       <p className="mt-1 text-[11px] text-muted">
         Kalau diisi, gambar ini menggantikan warna solid khusus di banner besar paling atas Landing Page (bukan
         header halaman lain). Ukuran ideal <strong>1600 × 900 piksel</strong> (rasio 16:9, standar umum banner web), format
@@ -266,7 +266,7 @@ function RekeningSection() {
         <select
           value={newAccount.jenis}
           onChange={(e) => setNewAccount({ ...newAccount, jenis: e.target.value })}
-          className="h-10 rounded-lg border border-border bg-white px-3 text-sm"
+          className="h-10 rounded-lg border border-border bg-card px-3 text-sm"
         >
           <option>Bank</option>
           <option>E-Wallet</option>
@@ -336,7 +336,7 @@ function PengumumanSection() {
       <div className="mt-3 flex flex-col gap-2">
         {announcements.length === 0 && <p className="text-xs text-muted">Belum ada pengumuman.</p>}
         {announcements.map((a) => (
-          <div key={a.id} className="flex items-center justify-between rounded-lg border border-border bg-white px-3 py-2 text-sm">
+          <div key={a.id} className="flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2 text-sm">
             <span>{a.text}</span>
             <button onClick={() => removeAnnouncement(a.id)} className="text-xs text-red-700">
               ✕

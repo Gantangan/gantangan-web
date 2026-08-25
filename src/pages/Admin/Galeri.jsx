@@ -47,7 +47,7 @@ export default function AdminGaleri() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-ink">Galeri Foto</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Galeri Foto</h1>
       <p className="mt-1 text-xs text-muted">
         Dokumentasi kegiatan, momen juara, atau suasana lomba — tampil di Landing Page dalam bentuk galeri foto.
       </p>

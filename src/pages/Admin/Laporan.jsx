@@ -30,17 +30,17 @@ export default function AdminLaporan() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-ink">Laporan</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Laporan</h1>
 
       <div className="mt-4 flex flex-wrap gap-6 rounded-card bg-ink p-5 text-cream">
         <div>
-          <div className="text-xs text-border">Total Pendapatan (tanpa kode unik)</div>
+          <div className="text-xs text-textSoft">Total Pendapatan (tanpa kode unik)</div>
           <div className="font-display text-2xl font-bold text-gold">{formatRupiah(totalPendapatan)}</div>
-          <div className="text-xs text-border">{totalLunas} nomor lunas</div>
+          <div className="text-xs text-textSoft">{totalLunas} nomor lunas</div>
         </div>
         <div className="flex flex-col justify-center gap-1 border-l border-inkSoft pl-6 text-sm">
           {perKategori.map((p) => (
-            <div key={p.id} className="flex gap-2 text-border">
+            <div key={p.id} className="flex gap-2 text-textSoft">
               <span>{p.name}</span>
               <span>
                 {p.lunas}× {formatRupiah(getHarga(p.id))} = {formatRupiah(p.total)}

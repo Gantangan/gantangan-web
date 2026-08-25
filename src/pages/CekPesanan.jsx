@@ -27,14 +27,14 @@ export default function CekPesanan() {
   const statusInfo = result ? STATUS_LABEL[result.status] : null;
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-bg">
       <Header subtitle="Cek Pesanan" />
       <main className="mx-auto max-w-md px-5 py-8">
-        <Link to="/" className="mb-4 inline-flex items-center gap-1 text-xs font-semibold text-inkSoft">
+        <Link to="/" className="mb-4 inline-flex items-center gap-1 text-xs font-semibold text-textSoft">
           <ArrowLeft className="h-3.5 w-3.5" /> Kembali ke Beranda
         </Link>
 
-        <h1 className="font-display text-2xl font-bold text-ink">Cek Pesanan</h1>
+        <h1 className="font-display text-2xl font-bold text-cream">Cek Pesanan</h1>
         <p className="mt-1 text-sm text-muted">Masukkan Kode Booking atau nomor WhatsApp yang dipakai saat mendaftar.</p>
 
         <div className="mt-4 flex gap-2">
@@ -56,7 +56,7 @@ export default function CekPesanan() {
         {result && (
           <div className="mt-5 rounded-card border border-border bg-card p-5">
             <div className="flex items-center justify-between">
-              <div className="font-mono text-sm font-bold text-ink">{result.kodeBooking}</div>
+              <div className="font-mono text-sm font-bold text-cream">{result.kodeBooking}</div>
               {statusInfo && <Badge variant={statusInfo.variant}>{statusInfo.text}</Badge>}
             </div>
             <div className="mt-4 flex flex-col gap-2 text-sm">
@@ -79,7 +79,7 @@ function Row({ label, value }) {
   return (
     <div className="flex justify-between gap-3 border-b border-border/60 pb-2">
       <span className="text-muted">{label}</span>
-      <span className="text-right font-medium text-ink">{value}</span>
+      <span className="text-right font-medium text-cream">{value}</span>
     </div>
   );
 }

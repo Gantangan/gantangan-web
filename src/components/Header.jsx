@@ -18,7 +18,7 @@ export default function Header({ subtitle, actions }) {
         <Logo size={40} />
         <div>
           <div className="font-display text-base tracking-wide">GANTANGAN KEBOKICAK</div>
-          {subtitle && <div className="text-xs text-border">{subtitle}</div>}
+          {subtitle && <div className="text-xs text-textSoft">{subtitle}</div>}
         </div>
       </Link>
       <div className="flex items-center gap-2">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth.jsx";
+import { usePageTitle } from "@/hooks/usePageTitle";
 import { useToast } from "@/components/Toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +36,7 @@ export default function Login() {
   return (
     <AuthLayout>
       <Card className="w-full max-w-sm p-6">
-        <div className="mb-4 flex rounded-lg bg-cream p-1">
+        <div className="mb-4 flex rounded-lg bg-card p-1">
           <button
             type="button"
             onClick={() => setRole("peserta")}

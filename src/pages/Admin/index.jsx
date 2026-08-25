@@ -6,7 +6,7 @@ import { useSettings } from "@/hooks/useSettings";
 export default function Admin() {
   const { announcements } = useSettings();
   return (
-    <div className="flex min-h-screen flex-col bg-cream md:flex-row">
+    <div className="flex min-h-screen flex-col bg-bg md:flex-row">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Ticker items={announcements} />

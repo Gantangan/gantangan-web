@@ -4,8 +4,8 @@ export default function Ticker({ items = [] }) {
   return (
     <div className="overflow-hidden whitespace-nowrap bg-gold py-1.5">
       <div className="inline-flex animate-marquee">
-        <span className="inline-block px-6 text-xs font-bold text-ink">{combined}</span>
-        <span className="inline-block px-6 text-xs font-bold text-ink">{combined}</span>
+        <span className="inline-block px-6 text-xs font-bold text-cream">{combined}</span>
+        <span className="inline-block px-6 text-xs font-bold text-cream">{combined}</span>
       </div>
     </div>
   );

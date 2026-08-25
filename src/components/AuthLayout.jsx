@@ -6,7 +6,7 @@ export default function AuthLayout({ children }) {
   const { headerColor, heroImage } = useSettings();
 
   return (
-    <div className="min-h-screen bg-cream font-body text-ink">
+    <div className="min-h-screen bg-bg font-body text-cream">
       <div
         className="relative flex w-full flex-col items-center justify-center overflow-hidden px-6 py-10 text-center text-cream"
         style={{

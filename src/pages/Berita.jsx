@@ -7,13 +7,13 @@ export default function Berita() {
   const { posts } = usePosts();
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-bg">
       <Header subtitle="Kegiatan & Update" />
       <main className="mx-auto max-w-3xl px-5 py-8">
-        <Link to="/" className="mb-4 inline-flex items-center gap-1 text-xs font-semibold text-inkSoft">
+        <Link to="/" className="mb-4 inline-flex items-center gap-1 text-xs font-semibold text-textSoft">
           <ArrowLeft className="h-3.5 w-3.5" /> Kembali ke Beranda
         </Link>
-        <h1 className="border-b-2 border-ink pb-2 font-display text-2xl font-bold uppercase tracking-wide text-ink">
+        <h1 className="border-b-2 border-cream pb-2 font-display text-2xl font-bold uppercase tracking-wide text-cream">
           📰 Kegiatan &amp; Update
         </h1>
 
@@ -37,7 +37,7 @@ export default function Berita() {
               )}
               <div className="min-w-0">
                 <h3
-                  className={`font-display font-bold leading-snug text-ink group-hover:text-goldDeep ${
+                  className={`font-display font-bold leading-snug text-cream group-hover:text-goldDeep ${
                     i === 0 ? "text-xl" : "text-sm line-clamp-2"
                   }`}
                 >
@@ -47,7 +47,7 @@ export default function Berita() {
                   <CalendarDays className="h-3 w-3" />
                   {new Date(p.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
                 </div>
-                {i === 0 && p.excerpt && <p className="mt-2 text-sm text-inkSoft">{p.excerpt}</p>}
+                {i === 0 && p.excerpt && <p className="mt-2 text-sm text-textSoft">{p.excerpt}</p>}
               </div>
             </Link>
           ))}

@@ -41,7 +41,7 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-screen bg-cream font-body text-ink">
+    <div className="min-h-screen bg-bg font-body text-cream">
       <motion.section
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -73,7 +73,7 @@ export default function Landing() {
         <Logo size={56} className="mb-3" />
         <div className="mb-2 font-mono text-xs tracking-[0.3em] text-gold">◈ GANTANGAN KEBOKICAK</div>
         <h1 className="font-display text-3xl font-bold leading-tight">Lomba Burung Berkicau</h1>
-        <p className="mt-2 max-w-xs text-sm text-border">Daftar nomor gantangan favoritmu, cepat dan mudah.</p>
+        <p className="mt-2 max-w-xs text-sm text-textSoft">Daftar nomor gantangan favoritmu, cepat dan mudah.</p>
 
         {countdown && (
           <div className="mt-6 rounded-2xl border border-gold/30 bg-white/5 px-6 py-4">
@@ -81,14 +81,14 @@ export default function Landing() {
             <div className="flex justify-center gap-5">
               <div className="flex flex-col items-center">
                 <div className="font-display text-3xl font-bold">{countdown.days}</div>
-                <div className="text-[10px] text-border">hari</div>
+                <div className="text-[10px] text-textSoft">hari</div>
               </div>
               <div className="flex flex-col items-center">
                 <div className="font-display text-3xl font-bold">{countdown.hours}</div>
-                <div className="text-[10px] text-border">jam</div>
+                <div className="text-[10px] text-textSoft">jam</div>
               </div>
             </div>
-            <div className="mt-2 text-[11px] text-border">{formatTanggalPanjang(countdown.cat.jadwal)}</div>
+            <div className="mt-2 text-[11px] text-textSoft">{formatTanggalPanjang(countdown.cat.jadwal)}</div>
           </div>
         )}
 
@@ -111,8 +111,8 @@ export default function Landing() {
       {posts.length > 0 && (
         <section className="border-b border-border bg-card px-5 py-7">
           <div className="mx-auto max-w-4xl">
-            <div className="flex items-center justify-between border-b-2 border-ink pb-2">
-              <h2 className="font-display text-xl font-bold uppercase tracking-wide text-ink">
+            <div className="flex items-center justify-between border-b-2 border-cream pb-2">
+              <h2 className="font-display text-xl font-bold uppercase tracking-wide text-cream">
                 📰 Kegiatan &amp; Update
               </h2>
               <Link to="/berita" className="text-xs font-bold text-goldDeep hover:underline">
@@ -137,10 +137,10 @@ export default function Landing() {
                 <span className="mt-3 inline-block rounded bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-ink">
                   Terbaru
                 </span>
-                <h3 className="mt-2 font-display text-xl font-bold leading-snug text-ink group-hover:text-goldDeep sm:text-2xl">
+                <h3 className="mt-2 font-display text-xl font-bold leading-snug text-cream group-hover:text-goldDeep sm:text-2xl">
                   {posts[0].title}
                 </h3>
-                {posts[0].excerpt && <p className="mt-1.5 line-clamp-2 text-sm text-inkSoft">{posts[0].excerpt}</p>}
+                {posts[0].excerpt && <p className="mt-1.5 line-clamp-2 text-sm text-textSoft">{posts[0].excerpt}</p>}
                 <div className="mt-2 flex items-center gap-1 text-[11px] font-medium text-muted">
                   <CalendarDays className="h-3 w-3" />
                   {new Date(posts[0].createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
@@ -158,7 +158,7 @@ export default function Landing() {
                         <div className="h-16 w-20 shrink-0 rounded-lg bg-ink/10" />
                       )}
                       <div className="min-w-0">
-                        <h4 className="font-display text-sm font-bold leading-snug text-ink line-clamp-2 group-hover:text-goldDeep">
+                        <h4 className="font-display text-sm font-bold leading-snug text-cream line-clamp-2 group-hover:text-goldDeep">
                           {p.title}
                         </h4>
                         <div className="mt-1 text-[10.5px] text-muted">

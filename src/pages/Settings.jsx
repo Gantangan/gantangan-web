@@ -33,7 +33,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-bg">
       <Header subtitle="Profil Saya" />
       <main className="px-5 py-8">
         <h1 className="font-display text-2xl font-bold">Profil Saya</h1>

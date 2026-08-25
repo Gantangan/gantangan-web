@@ -9,13 +9,13 @@ export default function Galeri() {
   const [active, setActive] = useState(null);
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-bg">
       <Header subtitle="Galeri Foto" />
       <main className="mx-auto max-w-3xl px-5 py-8">
-        <Link to="/" className="mb-4 inline-flex items-center gap-1 text-xs font-semibold text-inkSoft">
+        <Link to="/" className="mb-4 inline-flex items-center gap-1 text-xs font-semibold text-textSoft">
           <ArrowLeft className="h-3.5 w-3.5" /> Kembali ke Beranda
         </Link>
-        <h1 className="border-b-2 border-ink pb-2 font-display text-2xl font-bold uppercase tracking-wide text-ink">
+        <h1 className="border-b-2 border-cream pb-2 font-display text-2xl font-bold uppercase tracking-wide text-cream">
           📷 Galeri Foto
         </h1>
 

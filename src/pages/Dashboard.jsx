@@ -22,7 +22,7 @@ export default function Dashboard() {
   const countLunas = myBookings.filter((b) => b.status === "terkunci").length;
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-bg">
       <Header subtitle="Dashboard Peserta" />
       <main className="px-5 py-8">
         <h1 className="font-display text-2xl font-bold">Halo, {currentUser?.nama} 👋</h1>

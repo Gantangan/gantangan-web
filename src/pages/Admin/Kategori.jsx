@@ -56,7 +56,7 @@ export default function AdminKategori() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-ink">Kategori</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Kategori</h1>
       <p className="mt-1 text-sm text-muted">
         Jadwal lomba hanya hari <strong>Kamis</strong> dan <strong>Minggu</strong>. Pendaftaran otomatis ditutup H-2 sebelum tanggal event.
       </p>
@@ -67,7 +67,7 @@ export default function AdminKategori() {
       </div>
 
       <label className="mb-1 mt-5 block text-xs font-medium text-muted">Pilih kategori untuk diatur</label>
-      <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} className="h-10 w-full max-w-md rounded-lg border border-border bg-white px-3 text-sm">
+      <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} className="h-10 w-full max-w-md rounded-lg border border-border bg-card px-3 text-sm">
         {categories.map((c) => (
           <option key={c.id} value={c.id}>
             {c.name}

@@ -96,7 +96,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-ink">Dashboard</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">Dashboard</h1>
 
       <div className="mt-4 flex flex-wrap gap-3">
         <DashboardCard label="Pendapatan Hari Ini" value={formatRupiah(pendapatanHariIni)} />
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-base font-bold">Grafik Penjualan</h2>
           <div className="flex flex-wrap items-center gap-2 text-xs">
-            <div className="flex rounded-lg bg-cream p-1">
+            <div className="flex rounded-lg bg-card p-1">
               {GRANULARITAS.map((g) => (
                 <button
                   key={g.id}

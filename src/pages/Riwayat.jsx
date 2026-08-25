@@ -89,7 +89,7 @@ export default function Riwayat() {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-bg">
       <Header subtitle="Riwayat Booking" />
       <main className="px-5 py-8">
         <h1 className="font-display text-2xl font-bold">Riwayat Saya ({myBookings.length})</h1>
@@ -130,7 +130,7 @@ export default function Riwayat() {
         {targetSlot && (
           <div className="flex flex-col gap-3">
             <div className="rounded-lg border border-gold/40 bg-gold/10 p-3">
-              <p className="mb-2 text-xs font-bold text-ink">💳 Bayar Online (Midtrans)</p>
+              <p className="mb-2 text-xs font-bold text-cream">💳 Bayar Online (Midtrans)</p>
               <p className="mb-2 text-xs text-muted">
                 {isPaymentGatewayConfigured()
                   ? "Bayar langsung via VA, QRIS, atau e-wallet — otomatis terkonfirmasi."
@@ -157,8 +157,8 @@ export default function Riwayat() {
               </div>
             </div>
             {paymentAccounts.length > 0 && (
-              <div className="rounded-lg bg-cream p-3">
-                <p className="mb-2 text-xs font-bold text-ink">Transfer ke:</p>
+              <div className="rounded-lg bg-card p-3">
+                <p className="mb-2 text-xs font-bold text-cream">Transfer ke:</p>
                 <div className="flex flex-col gap-2">
                   {paymentAccounts.map((a) => (
                     <PaymentCard key={a.id} account={a} />

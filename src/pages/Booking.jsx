@@ -81,7 +81,7 @@ export default function Booking() {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-bg">
       <Header
         subtitle={currentUser ? `${currentUser.role === "admin" ? "Panitia" : "Peserta"} — ${currentUser.nama}` : "Pilih Nomor"}
         actions={
@@ -198,7 +198,7 @@ export default function Booking() {
           </DialogDescription>
           <div className="my-3 rounded-xl border-2 border-dashed border-gold bg-gold/10 p-4 text-center">
             <div className="text-xs text-muted">Kode Booking</div>
-            <div className="font-mono text-xl font-bold tracking-wider text-ink">{successInfo?.kodeBooking}</div>
+            <div className="font-mono text-xl font-bold tracking-wider text-cream">{successInfo?.kodeBooking}</div>
           </div>
           <p className="text-xs text-muted">
             Transfer dalam {HOLD_MINUTES} menit, lalu upload bukti di halaman Riwayat Booking.
