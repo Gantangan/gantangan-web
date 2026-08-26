@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, Lock, Timer, Wallet, ClipboardList, MessageCircleMore, CheckCircle2 } from "lucide-react";
 import Ticker from "@/components/Ticker";
-import Logo from "@/components/Logo";
 import { useBooking } from "@/hooks/useBooking";
 import { useSettings } from "@/hooks/useSettings";
 import { usePosts } from "@/hooks/usePosts";
@@ -11,105 +10,131 @@ import { usePhotos } from "@/hooks/usePhotos";
 import { formatRupiah } from "@/utils/format";
 import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
 
+const STEPS = [
+  { no: "1", title: "Pilih nomor", desc: "Nomor yang sudah dipesan tampil abu-abu dan terkunci.", icon: ClipboardList },
+  { no: "2", title: "Isi data", desc: "Nama peserta dan nomor WhatsApp untuk konfirmasi.", icon: MessageCircleMore },
+  { no: "3", title: "Bayar 15 menit", desc: "Transfer bank, e-wallet, atau scan QRIS.", icon: Timer },
+  { no: "4", title: "Konfirmasi", desc: "Nomor gantangan resmi jadi milik Anda.", icon: CheckCircle2 },
+];
+
 export default function Landing() {
-  const { categories, board, getHarga, getJadwal, getSlotCount, loaded } = useBooking();
-  const { headerColor, heroImage } = useSettings();
+  const { categories, board, getHarga, getJadwal, getSlotCount } = useBooking();
+  const { headerColor } = useSettings();
   const { posts } = usePosts();
   const { photos } = usePhotos();
   const [, forceTick] = useState(0);
 
-  // Refresh tiap menit biar countdown tetap akurat.
+  // Refresh tiap menit biar countdown/label tetap akurat.
   useEffect(() => {
     const t = setInterval(() => forceTick((n) => n + 1), 60000);
     return () => clearInterval(t);
   }, []);
 
-  const upcoming = categories
-    .map((c) => ({ ...c, jadwal: getJadwal(c.id) }))
+  const jadwalCategories = categories
+    .map((c) => ({ ...c, jadwal: getJadwal(c.id), harga: getHarga(c.id), sisa: getSlotCount(c.id) - (board[c.id] || []).filter((s) => s.status !== "kosong").length }))
     .filter((c) => c.jadwal)
-    .sort((a, b) => a.jadwal.localeCompare(b.jadwal))
-    .find((c) => new Date(c.jadwal + "T00:00:00").getTime() >= new Date().setHours(0, 0, 0, 0));
-
-  let countdown = null;
-  if (upcoming) {
-    const diffMs = new Date(upcoming.jadwal + "T00:00:00").getTime() - Date.now();
-    countdown = {
-      days: Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24))),
-      hours: Math.max(0, Math.floor((diffMs / (1000 * 60 * 60)) % 24)),
-      cat: upcoming,
-    };
-  }
+    .sort((a, b) => a.jadwal.localeCompare(b.jadwal));
 
   return (
     <div className="min-h-screen bg-bg font-body text-cream">
+      {/* Top bar minimal */}
+      <header className="flex items-center justify-between border-b border-border px-6 py-4">
+        <Link to="/" className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-gold" />
+          <span className="font-display text-sm font-bold uppercase tracking-wide">Gantangan Kebokicak</span>
+        </Link>
+        <Link to="/daftar" className="rounded-full bg-gold px-5 py-2 text-xs font-bold text-ink hover:brightness-95">
+          Pesan Tiket
+        </Link>
+      </header>
+
+      {/* Hero */}
       <motion.section
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative flex w-full flex-col items-center justify-center px-6 py-10 text-center text-cream"
-        style={{
-          backgroundColor: headerColor,
-          aspectRatio: heroImage ? "16 / 9" : undefined, // 1600x900 = rasio 16:9, standar umum banner web
-          minHeight: heroImage ? undefined : "auto",
-        }}
+        className="px-6 py-12"
+        style={{ background: `linear-gradient(180deg, ${headerColor}22, transparent)` }}
       >
-        {heroImage && (
-          <>
-            {/* Kotak section ini sengaja dibuat rasio 3:2 (1200x800) supaya gambar
-                pas mengisi penuh tanpa potong dan tanpa sisa ruang kosong. */}
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: `url(${heroImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-            {/* Overlay gelap tipis di atas gambar biar teks putih tetap kebaca */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/55" />
-          </>
-        )}
-        <div className="relative z-10 flex flex-col items-center">
-        <Logo size={56} className="mb-3" />
-        <div className="mb-2 font-mono text-xs tracking-[0.3em] text-gold">◈ GANTANGAN KEBOKICAK</div>
-        <h1 className="font-display text-3xl font-bold leading-tight">Lomba Burung Berkicau</h1>
-        <p className="mt-2 max-w-xs text-sm text-textSoft">Daftar nomor gantangan favoritmu, cepat dan mudah.</p>
-
-        {countdown && (
-          <div className="mt-6 rounded-2xl border border-gold/30 bg-white/5 px-6 py-4">
-            <div className="mb-2 text-xs font-semibold text-gold">Menuju {countdown.cat.name}</div>
-            <div className="flex justify-center gap-5">
-              <div className="flex flex-col items-center">
-                <div className="font-display text-3xl font-bold">{countdown.days}</div>
-                <div className="text-[10px] text-textSoft">hari</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="font-display text-3xl font-bold">{countdown.hours}</div>
-                <div className="text-[10px] text-textSoft">jam</div>
-              </div>
-            </div>
-            <div className="mt-2 text-[11px] text-textSoft">{formatTanggalPanjang(countdown.cat.jadwal)}</div>
+        <div className="mx-auto max-w-3xl">
+          <div className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-gold">
+            Gantangan Kebokicak · Kicau Mania
           </div>
-        )}
+          <h1 className="mt-3 font-display text-3xl font-bold leading-tight sm:text-4xl">
+            Booking gantangan
+            <br />
+            <span className="border-b-4 border-gold/70">tanpa rebutan</span> di lapangan.
+          </h1>
+          <p className="mt-3 max-w-xl text-sm text-textSoft">
+            Pilih nomor gantangan, kunci selama 15 menit, lalu bayar lewat transfer bank, e-wallet, atau QRIS. Nomor
+            yang sudah dikunci tidak bisa diambil orang lain.
+          </p>
 
-        <div className="mt-7 flex gap-3">
-          <Link to="/daftar" className="rounded-full bg-gold px-6 py-3 text-sm font-bold text-ink hover:brightness-95">
-            Daftar Akun
-          </Link>
-          <Link to="/login" className="rounded-full border border-cream px-6 py-3 text-sm font-bold text-cream hover:bg-white/10">
-            Masuk
-          </Link>
-        </div>
-        <Link to="/cek-pesanan" className="mt-3 text-xs font-semibold text-gold underline underline-offset-2">
-          Sudah booking? Cek status pesanan
-        </Link>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <FeatureCard icon={Lock} title="Nomor terkunci" desc="Satu nomor satu peserta, real-time." />
+            <FeatureCard icon={Timer} title="15 menit bayar" desc="Lewat batas waktu, nomor dibuka lagi." />
+            <FeatureCard icon={Wallet} title="3 metode bayar" desc="Bank, e-wallet, dan QRIS." />
+          </div>
         </div>
       </motion.section>
 
       <Ticker items={[]} />
 
+      {/* Jadwal & tiket gantangan */}
+      <section className="border-t border-border px-6 py-10">
+        <div className="mx-auto max-w-5xl">
+          <h2 className="font-display text-xl font-bold sm:text-2xl">Jadwal &amp; tiket gantangan</h2>
+          <p className="mt-1 text-sm text-textSoft">Klik kategori untuk memilih nomor gantangan.</p>
+
+          {jadwalCategories.length === 0 ? (
+            <p className="mt-6 text-sm text-muted">Jadwal event belum diatur panitia.</p>
+          ) : (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {jadwalCategories.map((c) => {
+                const d = new Date(c.jadwal + "T00:00:00");
+                return (
+                  <Link
+                    key={c.id}
+                    to="/daftar"
+                    className="group overflow-hidden rounded-card border border-border bg-card transition-colors hover:border-gold/60"
+                  >
+                    <div className="relative h-32 w-full" style={{ background: `linear-gradient(135deg, ${c.tagColor}55, ${c.tagColor}11)` }}>
+                      <span className="absolute right-2 top-2 rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-bold text-ink">
+                        {Math.max(c.sisa, 0)} sisa
+                      </span>
+                    </div>
+                    <div className="p-4">
+                      <div className="text-[10.5px] font-bold uppercase tracking-wide text-gold">Kelas {c.name}</div>
+                      <div className="mt-1 font-display text-base font-bold leading-snug group-hover:text-goldDeep">
+                        Gantangan Kebokicak — {c.name}
+                      </div>
+                      <div className="mt-2 flex items-center gap-1 text-[11px] text-textSoft">
+                        <CalendarDays className="h-3 w-3" />
+                        {HARI_LABEL[d.getDay()]}, {formatTanggalPanjang(c.jadwal)}
+                      </div>
+                      <div className="mt-2 font-display text-base font-bold">{formatRupiah(c.harga)}</div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
+          {/* 4 langkah */}
+          <div className="mt-10 grid gap-6 border-t border-border pt-8 sm:grid-cols-4">
+            {STEPS.map((s) => (
+              <div key={s.no}>
+                <div className="text-xs font-bold text-gold">{s.no}. {s.title}</div>
+                <p className="mt-1 text-xs text-textSoft">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Kegiatan & Update */}
       {posts.length > 0 && (
-        <section className="border-b border-border bg-card px-5 py-7">
+        <section className="border-t border-border bg-card px-5 py-7">
           <div className="mx-auto max-w-4xl">
             <div className="flex items-center justify-between border-b-2 border-cream pb-2">
               <h2 className="font-display text-xl font-bold uppercase tracking-wide text-cream">
@@ -121,7 +146,6 @@ export default function Landing() {
             </div>
 
             <div className="mt-4 grid gap-5 sm:grid-cols-5">
-              {/* Berita utama — kolom besar, gaya headline portal berita */}
               <Link to={`/berita/${posts[0].id}`} className="group block sm:col-span-3">
                 <div className="overflow-hidden rounded-card">
                   {posts[0].image ? (
@@ -147,7 +171,6 @@ export default function Landing() {
                 </div>
               </Link>
 
-              {/* Berita lainnya — list editorial: thumbnail kecil kiri, teks kanan */}
               {posts.length > 1 && (
                 <div className="flex flex-col divide-y divide-border sm:col-span-2">
                   {posts.slice(1, 5).map((p) => (
@@ -174,9 +197,10 @@ export default function Landing() {
         </section>
       )}
 
-      <main className="px-5 py-6">
-        {photos.length > 0 && (
-          <div className="mb-8">
+      {/* Galeri Foto */}
+      {photos.length > 0 && (
+        <section className="border-t border-border px-5 py-7">
+          <div className="mx-auto max-w-4xl">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-2xl font-bold">Galeri Foto</h2>
               <Link to="/galeri" className="text-xs font-semibold text-goldDeep underline">
@@ -195,30 +219,29 @@ export default function Landing() {
               ))}
             </div>
           </div>
-        )}
+        </section>
+      )}
 
-        <h2 className="font-display text-2xl font-bold">Kategori Lomba</h2>
-        <div className="mt-4 grid grid-cols-3 gap-2.5 sm:grid-cols-4">
-          {categories.map((c) => (
-            <div
-              key={c.id}
-              className="flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 bg-card px-2 py-4 text-center"
-              style={{ borderColor: c.tagColor }}
-            >
-              <span className="h-3 w-3 rounded-full" style={{ background: c.tagColor }} />
-              <div className="font-display text-sm font-bold leading-tight">{c.name}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 text-center">
-          <Link to="/login" className="rounded-full bg-ink px-5 py-2.5 text-xs font-semibold text-cream">
+      {/* Footer */}
+      <footer className="border-t border-border px-6 py-5">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 text-center text-[11px] text-muted sm:flex-row sm:justify-between sm:text-left">
+          <div>◈ Gantangan Kebokicak</div>
+          <Link to="/login" className="font-semibold text-textSoft hover:text-cream">
             Login Panitia
           </Link>
+          <div>© {new Date().getFullYear()} Gantangan Kebokicak</div>
         </div>
+      </footer>
+    </div>
+  );
+}
 
-        {!loaded && <p className="mt-6 text-center text-xs text-muted">Memuat data…</p>}
-      </main>
+function FeatureCard({ icon: Icon, title, desc }) {
+  return (
+    <div className="rounded-card border border-border bg-card p-4">
+      <Icon className="h-4 w-4 text-gold" />
+      <div className="mt-2 text-sm font-bold text-cream">{title}</div>
+      <p className="mt-0.5 text-xs text-textSoft">{desc}</p>
     </div>
   );
 }
