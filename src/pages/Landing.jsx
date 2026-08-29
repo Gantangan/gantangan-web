@@ -19,7 +19,7 @@ const STEPS = [
 
 export default function Landing() {
   const { categories, board, getHarga, getJadwal, getSlotCount } = useBooking();
-  const { headerColor } = useSettings();
+  const { headerColor, contactWhatsapp } = useSettings();
   const { posts } = usePosts();
   const { photos } = usePhotos();
   const [, forceTick] = useState(0);
@@ -104,7 +104,10 @@ export default function Landing() {
                       </span>
                     </div>
                     <div className="p-4">
-                      <div className="text-[10.5px] font-bold uppercase tracking-wide text-gold">Kelas {c.name}</div>
+                      <div className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wide text-gold">
+                        <span className="h-2 w-2 rounded-full" style={{ background: c.tagColor }} />
+                        Kelas {c.name}
+                      </div>
                       <div className="mt-1 font-display text-base font-bold leading-snug group-hover:text-goldDeep">
                         Gantangan Kebokicak — {c.name}
                       </div>
@@ -226,6 +229,7 @@ export default function Landing() {
       <footer className="border-t border-border px-6 py-5">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 text-center text-[11px] text-muted sm:flex-row sm:justify-between sm:text-left">
           <div>◈ Gantangan Kebokicak</div>
+          {contactWhatsapp && <div>WhatsApp panitia: {contactWhatsapp}</div>}
           <Link to="/login" className="font-semibold text-textSoft hover:text-cream">
             Login Panitia
           </Link>

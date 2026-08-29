@@ -11,6 +11,7 @@ export function SettingsProvider({ children }) {
   const [logo, setLogoState] = useState(null); // data URL gambar logo, atau null kalau belum diatur
   const [headerColor, setHeaderColorState] = useState(DEFAULT_HEADER_COLOR);
   const [heroImage, setHeroImageState] = useState(null);
+  const [contactWhatsapp, setContactWhatsappState] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export function SettingsProvider({ children }) {
       setLogoState((await getItem("logo", null)) || null);
       setHeaderColorState((await getItem("headerColor", null)) || DEFAULT_HEADER_COLOR);
       setHeroImageState((await getItem("heroImage", null)) || null);
+      setContactWhatsappState((await getItem("contactWhatsapp", null)) || "");
       setLoaded(true);
     })();
   }, []);
@@ -96,6 +98,11 @@ export function SettingsProvider({ children }) {
     setItem("heroImage", null);
   }, []);
 
+  const setContactWhatsapp = useCallback((value) => {
+    setContactWhatsappState(value);
+    setItem("contactWhatsapp", value);
+  }, []);
+
   return (
     <SettingsContext.Provider
       value={{
@@ -104,6 +111,7 @@ export function SettingsProvider({ children }) {
         logo,
         headerColor,
         heroImage,
+        contactWhatsapp,
         loaded,
         addAnnouncement,
         removeAnnouncement,
@@ -115,6 +123,7 @@ export function SettingsProvider({ children }) {
         resetHeaderColor,
         setHeroImage,
         removeHeroImage,
+        setContactWhatsapp,
       }}
     >
       {children}

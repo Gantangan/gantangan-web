@@ -135,7 +135,16 @@ function LogoSection() {
 }
 
 function TampilanSection() {
-  const { headerColor, setHeaderColor, resetHeaderColor, heroImage, setHeroImage, removeHeroImage } = useSettings();
+  const {
+    headerColor,
+    setHeaderColor,
+    resetHeaderColor,
+    heroImage,
+    setHeroImage,
+    removeHeroImage,
+    contactWhatsapp,
+    setContactWhatsapp,
+  } = useSettings();
   const showToast = useToast();
 
   async function handleHeroUpload(e) {
@@ -195,6 +204,15 @@ function TampilanSection() {
       <p className="mt-2 text-[11px] text-muted">
         Tips: pilih warna yang cukup gelap supaya tulisan putih di atasnya tetap jelas terbaca.
       </p>
+
+      <h3 className="mt-5 text-sm font-bold text-cream">Kontak WhatsApp Panitia</h3>
+      <p className="mt-1 text-[11px] text-muted">Ditampilkan di footer Landing Page biar peserta gampang tanya-tanya.</p>
+      <Input
+        value={contactWhatsapp}
+        onChange={(e) => setContactWhatsapp(e.target.value)}
+        placeholder="0812-0000-1234"
+        className="mt-2 w-48"
+      />
 
       <h3 className="mt-5 text-sm font-bold text-cream">Gambar Hero Banner (Landing Page)</h3>
       <p className="mt-1 text-[11px] text-muted">
