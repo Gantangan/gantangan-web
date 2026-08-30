@@ -75,6 +75,7 @@ export function BookingProvider({ children }) {
 
   const getHarga = useCallback((catId) => categoryConfig[catId]?.harga ?? HARGA_DASAR, [categoryConfig]);
   const getJadwal = useCallback((catId) => categoryConfig[catId]?.jadwal || null, [categoryConfig]);
+  const getDeskripsi = useCallback((catId) => categoryConfig[catId]?.deskripsi || "", [categoryConfig]);
   const getSlotCount = useCallback(
     (catId) => categoryConfig[catId]?.slotCount ?? SLOTS_PER_CATEGORY,
     [categoryConfig]
@@ -268,6 +269,7 @@ export function BookingProvider({ children }) {
         loaded,
         getHarga,
         getJadwal,
+        getDeskripsi,
         getSlotCount,
         isBookingClosed,
         bookSlot,

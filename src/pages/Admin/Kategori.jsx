@@ -6,7 +6,7 @@ import { useToast } from "@/components/Toast";
 import { HARI_LABEL, HARI_LOMBA, formatTanggalPanjang } from "@/utils/date";
 
 export default function AdminKategori() {
-  const { categories, board, getHarga, getJadwal, getSlotCount, isBookingClosed, addCategory, renameCategory, removeCategory, resizeCategory, updateCategoryConfig } = useBooking();
+  const { categories, board, getHarga, getJadwal, getDeskripsi, getSlotCount, isBookingClosed, addCategory, renameCategory, removeCategory, resizeCategory, updateCategoryConfig } = useBooking();
   const showToast = useToast();
   const [newName, setNewName] = useState("");
   const [selectedId, setSelectedId] = useState(categories[0]?.id || "");
@@ -120,6 +120,17 @@ export default function AdminKategori() {
               {isBookingClosed(selected.id) && <span className="ml-1 font-bold text-red-400">— pendaftaran ditutup</span>}
             </p>
           )}
+
+          <label className="mb-1 mt-3 block text-xs font-medium text-muted">Deskripsi Event (opsional)</label>
+          <textarea
+            defaultValue={getDeskripsi(selected.id)}
+            key={selected.id + "-deskripsi"}
+            onBlur={(e) => updateCategoryConfig(selected.id, { deskripsi: e.target.value })}
+            placeholder="Contoh: Latihan bersama rutin dengan juri bersertifikat. Gantangan bersih, sound system jernih, dan hadiah trofi untuk juara 1-5."
+            rows={3}
+            className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-cream placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-gold"
+          />
+          <p className="mt-1 text-[11px] text-muted">Tampil di halaman pilih nomor peserta. Otomatis tersimpan saat pindah fokus.</p>
 
           <Button variant="destructive" size="sm" className="mt-4" onClick={handleRemove}>
             Hapus Kategori Ini

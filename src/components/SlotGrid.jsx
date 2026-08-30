@@ -25,7 +25,7 @@ function buildSnakeLayout(totalSlots, rows) {
   return { positions, numColumns };
 }
 
-export default function SlotGrid({ slots, onSlotClick }) {
+export default function SlotGrid({ slots, onSlotClick, selectedNo }) {
   const slotByNo = {};
   slots.forEach((s) => (slotByNo[s.no] = s));
 
@@ -44,7 +44,7 @@ export default function SlotGrid({ slots, onSlotClick }) {
         if (!slot) return null;
         return (
           <div key={no} style={{ gridColumn: col + 1, gridRow: row + 1 }}>
-            <SlotButton slot={slot} onClick={() => onSlotClick(slot)} />
+            <SlotButton slot={slot} onClick={() => onSlotClick(slot)} selected={selectedNo === no} />
           </div>
         );
       })}
