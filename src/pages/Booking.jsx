@@ -1,29 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, LayoutDashboard, CalendarDays, MapPin } from "lucide-react";
+import { ArrowLeft, LayoutDashboard, CalendarDays, MapPin, Landmark, Smartphone, QrCode } from "lucide-react";
 import Header from "@/components/Header";
 import SlotGrid from "@/components/SlotGrid";
+import PaymentCard from "@/components/PaymentCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth.jsx";
 import { useBooking } from "@/hooks/useBooking";
+import { useSettings } from "@/hooks/useSettings";
 import { useToast } from "@/components/Toast";
-import { formatRupiah } from "@/utils/format";
+import { formatRupiah, formatMMSS } from "@/utils/format";
 import { formatTanggalPanjang } from "@/utils/date";
-import { HOLD_MINUTES } from "@/constants";
+import { HOLD_MINUTES, HOLD_MS } from "@/constants";
+
+const METHOD_TABS = [
+  { id: "Bank", label: "Transfer Bank", icon: Landmark },
+  { id: "E-Wallet", label: "E-Wallet", icon: Smartphone },
+  { id: "QRIS", label: "QRIS", icon: QrCode },
+];
 
 export default function Booking() {
   const { currentUser } = useAuth();
   const { categories, board, getHarga, getDeskripsi, getJadwal, getSlotCount, isBookingClosed, bookSlot } = useBooking();
+  const { paymentAccounts } = useSettings();
   const showToast = useToast();
   const navigate = useNavigate();
 
   const [activeCat, setActiveCat] = useState(null);
   const [selectedNo, setSelectedNo] = useState(null);
   const [form, setForm] = useState({ namaPeserta: "", whatsapp: "", burung: "", namaPemilik: "", alamat: "", catatan: "" });
-  const [successInfo, setSuccessInfo] = useState(null); // {kodeBooking, no, catName}
+  const [successInfo, setSuccessInfo] = useState(null); // {catId, no, catName}
+  const [payMethod, setPayMethod] = useState("Bank");
+  const [, forceTick] = useState(0);
+
+  // Detak tiap detik biar sisa waktu bayar di popup selalu akurat.
+  useEffect(() => {
+    if (!successInfo) return;
+    const t = setInterval(() => forceTick((n) => n + 1), 1000);
+    return () => clearInterval(t);
+  }, [successInfo]);
 
   const cat = categories.find((c) => c.id === activeCat);
   const slots = cat ? board[cat.id] || [] : [];
@@ -83,14 +101,21 @@ export default function Booking() {
       setSelectedNo(null);
       return;
     }
-    setSuccessInfo({ kodeBooking: res.kodeBooking, no: selectedNo, catName: cat.name });
+    setSuccessInfo({ catId: cat.id, no: selectedNo, catName: cat.name });
+    setPayMethod("Bank");
     setSelectedNo(null);
   }
 
   function closeSuccessAndGo() {
     setSuccessInfo(null);
-    if (currentUser?.role === "peserta") navigate("/dashboard");
+    if (currentUser?.role === "peserta") navigate("/riwayat");
   }
+
+  // Data booking yang baru dibuat, diambil live dari board biar sisa waktu & kode akurat.
+  const paidSlot = successInfo ? (board[successInfo.catId] || []).find((s) => s.no === successInfo.no) : null;
+  const paidNominal = paidSlot?.kodeUnik != null ? getHarga(successInfo.catId) + paidSlot.kodeUnik : null;
+  const sisaWaktuMs = paidSlot?.bookedAt ? Math.max(0, HOLD_MS - (Date.now() - paidSlot.bookedAt)) : 0;
+  const accountsForMethod = paymentAccounts.filter((a) => a.jenis === payMethod);
 
   return (
     <div className="min-h-screen bg-bg">
@@ -214,20 +239,66 @@ export default function Booking() {
       )}
 
       <Dialog open={!!successInfo} onOpenChange={(open) => !open && closeSuccessAndGo()}>
-        <DialogContent>
-          <DialogTitle>🎉 Booking Berhasil!</DialogTitle>
-          <DialogDescription>
-            {successInfo?.catName} — No. {successInfo?.no}. Simpan kode booking ini untuk cek status kapan saja.
-          </DialogDescription>
-          <div className="my-3 rounded-xl border-2 border-dashed border-gold bg-gold/10 p-4 text-center">
-            <div className="text-xs text-muted">Kode Booking</div>
-            <div className="font-mono text-xl font-bold tracking-wider text-cream">{successInfo?.kodeBooking}</div>
+        <DialogContent className="max-w-md">
+          <DialogTitle>Gantangan Kebokicak</DialogTitle>
+          <DialogDescription className="sr-only">Selesaikan pembayaran dalam {HOLD_MINUTES} menit.</DialogDescription>
+
+          {/* Kartu ringkasan + sisa waktu */}
+          <div className="mt-2 rounded-card border border-border bg-ink/40 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-wide text-gold">Sisa waktu bayar</div>
+                <div className="mt-0.5 font-display text-2xl font-bold text-cream">{formatMMSS(sisaWaktuMs)}</div>
+              </div>
+              <div className="text-right text-[11px] leading-relaxed text-textSoft">
+                <div>{successInfo?.catName}</div>
+                <div>
+                  Nomor gantangan <strong className="text-cream">{successInfo?.no}</strong>
+                </div>
+                {paidSlot && (
+                  <div>
+                    {paidSlot.pemilik} · {paidSlot.kodeBooking}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="mt-3 font-display text-xl font-bold text-gold">
+              {paidNominal != null ? formatRupiah(paidNominal) : "-"}
+            </div>
           </div>
-          <p className="text-xs text-muted">
-            Transfer dalam {HOLD_MINUTES} menit, lalu upload bukti di halaman Riwayat Booking.
-          </p>
+
+          {/* Tab metode bayar */}
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {METHOD_TABS.map((m) => (
+              <button
+                key={m.id}
+                onClick={() => setPayMethod(m.id)}
+                className={`flex flex-col items-center gap-1 rounded-lg border px-2 py-3 text-xs font-semibold transition-colors ${
+                  payMethod === m.id ? "border-gold bg-gold/10 text-cream" : "border-border text-textSoft hover:border-inkSoft"
+                }`}
+              >
+                <m.icon className="h-4 w-4" />
+                {m.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Info rekening/QR sesuai tab */}
+          <div className="mt-3 rounded-lg bg-card p-3">
+            {accountsForMethod.length === 0 ? (
+              <p className="text-xs text-muted">Panitia belum menambahkan {payMethod === "Bank" ? "rekening bank" : payMethod === "E-Wallet" ? "e-wallet" : "QRIS"}.</p>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {accountsForMethod.map((a) => (
+                  <PaymentCard key={a.id} account={a} />
+                ))}
+              </div>
+            )}
+            <p className="mt-2 text-[11px] text-muted">Transfer sesuai nominal persis agar verifikasi otomatis berhasil.</p>
+          </div>
+
           <Button className="mt-4 w-full" onClick={closeSuccessAndGo}>
-            Oke, Lanjutkan
+            Saya sudah bayar
           </Button>
         </DialogContent>
       </Dialog>
