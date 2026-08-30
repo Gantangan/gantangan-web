@@ -141,7 +141,7 @@ export default function AdminPostingan() {
             <button onClick={() => openEdit(p)} className="shrink-0 rounded-lg p-2 text-muted hover:bg-card">
               <Pencil className="h-4 w-4" />
             </button>
-            <button onClick={() => handleDelete(p.id)} className="shrink-0 rounded-lg p-2 text-red-700 hover:bg-card">
+            <button onClick={() => handleDelete(p.id)} className="shrink-0 rounded-lg p-2 text-red-400 hover:bg-card">
               <Trash2 className="h-4 w-4" />
             </button>
           </div>

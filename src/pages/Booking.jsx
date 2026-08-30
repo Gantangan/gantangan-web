@@ -122,7 +122,7 @@ export default function Booking() {
                     {count}/{getSlotCount(c.id)} terisi
                   </div>
                   <div className="font-mono text-xs font-bold text-goldDeep">{formatRupiah(getHarga(c.id))}</div>
-                  {closed && <div className="mt-1 text-[11px] font-bold text-red-700">Pendaftaran ditutup</div>}
+                  {closed && <div className="mt-1 text-[11px] font-bold text-red-400">Pendaftaran ditutup</div>}
                 </button>
               );
             })}

@@ -50,7 +50,7 @@ export default function CekPesanan() {
         </div>
 
         {result === null && (
-          <p className="mt-4 text-sm text-red-700">Pesanan tidak ditemukan. Cek kembali kode booking atau nomor WhatsApp-nya.</p>
+          <p className="mt-4 text-sm text-red-400">Pesanan tidak ditemukan. Cek kembali kode booking atau nomor WhatsApp-nya.</p>
         )}
 
         {result && (

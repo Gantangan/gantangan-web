@@ -9,7 +9,7 @@ const badgeVariants = cva("inline-flex items-center rounded-full px-2.5 py-0.5 t
       kosong: "bg-statusKosong/15 text-emerald-700",
       pending: "bg-statusPending/20 text-amber-700",
       verifikasi: "bg-statusVerifikasi/15 text-blue-700",
-      terisi: "bg-statusTerisi/15 text-red-700",
+      terisi: "bg-statusTerisi/15 text-red-400",
     },
   },
   defaultVariants: { variant: "default" },

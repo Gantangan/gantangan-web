@@ -117,7 +117,7 @@ export default function AdminKategori() {
           {jadwal && (
             <p className="mt-2 text-xs text-muted">
               Terjadwal {formatTanggalPanjang(jadwal)}
-              {isBookingClosed(selected.id) && <span className="ml-1 font-bold text-red-700">— pendaftaran ditutup</span>}
+              {isBookingClosed(selected.id) && <span className="ml-1 font-bold text-red-400">— pendaftaran ditutup</span>}
             </p>
           )}
 

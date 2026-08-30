@@ -52,7 +52,7 @@ export default function Register() {
             <Input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="••••••••" />
           </div>
 
-          {error && <p className="text-xs text-red-700">{error}</p>}
+          {error && <p className="text-xs text-red-400">{error}</p>}
 
           <Button type="submit" className="mt-1 w-full">
             Daftar

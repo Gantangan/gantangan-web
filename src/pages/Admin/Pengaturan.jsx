@@ -124,7 +124,7 @@ function LogoSection() {
         <div className="flex flex-col gap-2">
           <Input type="file" accept="image/*" onChange={handleLogoUpload} />
           {logo && (
-            <button onClick={removeLogo} className="self-start text-xs text-red-700">
+            <button onClick={removeLogo} className="self-start text-xs text-red-400">
               ✕ Hapus logo (kembali ke ikon default)
             </button>
           )}
@@ -195,7 +195,7 @@ function TampilanSection() {
             className="w-32 font-mono uppercase"
           />
           {headerColor !== DEFAULT_HEADER_COLOR && (
-            <button onClick={resetHeaderColor} className="self-start text-xs text-red-700">
+            <button onClick={resetHeaderColor} className="self-start text-xs text-red-400">
               ✕ Kembalikan ke warna default
             </button>
           )}
@@ -227,7 +227,7 @@ function TampilanSection() {
       <div className="mt-2 flex flex-col gap-1">
         <Input type="file" accept="image/*" onChange={handleHeroUpload} />
         {heroImage && (
-          <button onClick={removeHeroImage} className="self-start text-xs text-red-700">
+          <button onClick={removeHeroImage} className="self-start text-xs text-red-400">
             ✕ Hapus gambar (kembali ke warna solid)
           </button>
         )}
@@ -356,7 +356,7 @@ function PengumumanSection() {
         {announcements.map((a) => (
           <div key={a.id} className="flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2 text-sm">
             <span>{a.text}</span>
-            <button onClick={() => removeAnnouncement(a.id)} className="text-xs text-red-700">
+            <button onClick={() => removeAnnouncement(a.id)} className="text-xs text-red-400">
               ✕
             </button>
           </div>

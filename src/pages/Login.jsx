@@ -65,7 +65,7 @@ export default function Login() {
             <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
           </div>
 
-          {error && <p className="text-xs text-red-700">{error}</p>}
+          {error && <p className="text-xs text-red-400">{error}</p>}
 
           <Button type="submit" variant="default" className="mt-1 w-full">
             {role === "admin" ? "Masuk sebagai Admin" : "Masuk"}
