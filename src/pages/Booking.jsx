@@ -24,7 +24,7 @@ const METHOD_TABS = [
 
 export default function Booking() {
   const { currentUser } = useAuth();
-  const { categories, board, getHarga, getDeskripsi, getJadwal, getSlotCount, isBookingClosed, bookSlot } = useBooking();
+  const { categories, board, getHarga, getDeskripsi, getJadwal, getSlotCount, isBookingClosed, bookSlot, submitBukti } = useBooking();
   const { paymentAccounts } = useSettings();
   const showToast = useToast();
   const navigate = useNavigate();
@@ -34,6 +34,8 @@ export default function Booking() {
   const [form, setForm] = useState({ namaPeserta: "", whatsapp: "", burung: "", namaPemilik: "", alamat: "", catatan: "" });
   const [successInfo, setSuccessInfo] = useState(null); // {catId, no, catName}
   const [payMethod, setPayMethod] = useState("Bank");
+  const [payStep, setPayStep] = useState("confirm"); // confirm -> proof -> done
+  const [kodeText, setKodeText] = useState("");
   const [, forceTick] = useState(0);
 
   // Detak tiap detik biar sisa waktu bayar di popup selalu akurat.
@@ -103,12 +105,36 @@ export default function Booking() {
     }
     setSuccessInfo({ catId: cat.id, no: selectedNo, catName: cat.name });
     setPayMethod("Bank");
+    setPayStep("confirm");
     setSelectedNo(null);
   }
 
-  function closeSuccessAndGo() {
+  function closeDialog() {
     setSuccessInfo(null);
-    if (currentUser?.role === "peserta") navigate("/riwayat");
+    setPayStep("confirm");
+    setKodeText("");
+  }
+
+  function handleUploadBukti(e) {
+    const file = e.target.files?.[0];
+    if (!file || !successInfo) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      submitBukti(successInfo.catId, successInfo.no, { buktiTransfer: reader.result });
+      setPayStep("done");
+      showToast("ok", "Bukti transfer terkirim, menunggu verifikasi panitia.");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleKirimKode() {
+    if (!kodeText.trim() || !successInfo) {
+      showToast("error", "Isi kode/keterangan transfer dulu.");
+      return;
+    }
+    submitBukti(successInfo.catId, successInfo.no, { catatanTransfer: kodeText.trim() });
+    setPayStep("done");
+    showToast("ok", "Keterangan transfer terkirim, menunggu verifikasi panitia.");
   }
 
   // Data booking yang baru dibuat, diambil live dari board biar sisa waktu & kode akurat.
@@ -238,12 +264,12 @@ export default function Booking() {
         </main>
       )}
 
-      <Dialog open={!!successInfo} onOpenChange={(open) => !open && closeSuccessAndGo()}>
+      <Dialog open={!!successInfo} onOpenChange={(open) => !open && closeDialog()}>
         <DialogContent className="max-w-md">
           <DialogTitle>Gantangan Kebokicak</DialogTitle>
           <DialogDescription className="sr-only">Selesaikan pembayaran dalam {HOLD_MINUTES} menit.</DialogDescription>
 
-          {/* Kartu ringkasan + sisa waktu */}
+          {/* Kartu ringkasan + sisa waktu — selalu tampil di semua tahap */}
           <div className="mt-2 rounded-card border border-border bg-ink/40 p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -267,39 +293,77 @@ export default function Booking() {
             </div>
           </div>
 
-          {/* Tab metode bayar */}
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {METHOD_TABS.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setPayMethod(m.id)}
-                className={`flex flex-col items-center gap-1 rounded-lg border px-2 py-3 text-xs font-semibold transition-colors ${
-                  payMethod === m.id ? "border-gold bg-gold/10 text-cream" : "border-border text-textSoft hover:border-inkSoft"
-                }`}
-              >
-                <m.icon className="h-4 w-4" />
-                {m.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Info rekening/QR sesuai tab */}
-          <div className="mt-3 rounded-lg bg-card p-3">
-            {accountsForMethod.length === 0 ? (
-              <p className="text-xs text-muted">Panitia belum menambahkan {payMethod === "Bank" ? "rekening bank" : payMethod === "E-Wallet" ? "e-wallet" : "QRIS"}.</p>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {accountsForMethod.map((a) => (
-                  <PaymentCard key={a.id} account={a} />
+          {payStep === "confirm" && (
+            <>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {METHOD_TABS.map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => setPayMethod(m.id)}
+                    className={`flex flex-col items-center gap-1 rounded-lg border px-2 py-3 text-xs font-semibold transition-colors ${
+                      payMethod === m.id ? "border-gold bg-gold/10 text-cream" : "border-border text-textSoft hover:border-inkSoft"
+                    }`}
+                  >
+                    <m.icon className="h-4 w-4" />
+                    {m.label}
+                  </button>
                 ))}
               </div>
-            )}
-            <p className="mt-2 text-[11px] text-muted">Transfer sesuai nominal persis agar verifikasi otomatis berhasil.</p>
-          </div>
 
-          <Button className="mt-4 w-full" onClick={closeSuccessAndGo}>
-            Saya sudah bayar
-          </Button>
+              <div className="mt-3 rounded-lg bg-card p-3">
+                {accountsForMethod.length === 0 ? (
+                  <p className="text-xs text-muted">
+                    Panitia belum menambahkan {payMethod === "Bank" ? "rekening bank" : payMethod === "E-Wallet" ? "e-wallet" : "QRIS"}.
+                  </p>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {accountsForMethod.map((a) => (
+                      <PaymentCard key={a.id} account={a} />
+                    ))}
+                  </div>
+                )}
+                <p className="mt-2 text-[11px] text-muted">Transfer sesuai nominal persis agar verifikasi otomatis berhasil.</p>
+              </div>
+
+              <Button className="mt-4 w-full" onClick={() => setPayStep("proof")}>
+                Saya sudah bayar
+              </Button>
+            </>
+          )}
+
+          {payStep === "proof" && (
+            <div className="mt-3">
+              <h3 className="text-sm font-bold text-cream">Kirim bukti transfer</h3>
+              <p className="mt-1 text-xs text-muted">Upload screenshot bukti transfer, atau ketik keterangan singkat.</p>
+              <Input type="file" accept="image/*" onChange={handleUploadBukti} className="mt-2" />
+
+              <div className="my-3 flex items-center gap-2 text-[11px] text-muted">
+                <div className="h-px flex-1 bg-border" /> atau <div className="h-px flex-1 bg-border" />
+              </div>
+
+              <Input value={kodeText} onChange={(e) => setKodeText(e.target.value)} placeholder="Contoh: sudah transfer via m-banking BCA jam 14:05" />
+              <Button className="mt-2 w-full" variant="ghost" onClick={handleKirimKode}>
+                Kirim Keterangan
+              </Button>
+
+              <button onClick={() => setPayStep("confirm")} className="mt-3 text-xs font-semibold text-textSoft hover:text-cream">
+                ← Kembali ke info rekening
+              </button>
+            </div>
+          )}
+
+          {payStep === "done" && (
+            <div className="mt-4 text-center">
+              <div className="text-3xl">✅</div>
+              <h3 className="mt-2 font-display text-base font-bold text-cream">Bukti terkirim!</h3>
+              <p className="mt-1 text-xs text-muted">
+                Panitia akan verifikasi pembayaranmu. Cek status kapan saja lewat halaman Riwayat Booking.
+              </p>
+              <Button className="mt-4 w-full" onClick={closeDialog}>
+                Tutup
+              </Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
