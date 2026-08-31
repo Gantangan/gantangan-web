@@ -353,14 +353,17 @@ export default function Booking() {
           )}
 
           {payStep === "done" && (
-            <div className="mt-4 text-center">
-              <div className="text-3xl">✅</div>
-              <h3 className="mt-2 font-display text-base font-bold text-cream">Bukti terkirim!</h3>
-              <p className="mt-1 text-xs text-muted">
-                Panitia akan verifikasi pembayaranmu. Cek status kapan saja lewat halaman Riwayat Booking.
+            <div className="mt-4 flex flex-col items-center py-2 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-gold text-2xl text-gold">
+                ✓
+              </div>
+              <h3 className="mt-3 font-display text-lg font-bold text-cream">Bukti Terkirim!</h3>
+              <p className="mt-1 max-w-xs text-xs text-textSoft">
+                Nomor gantangan <strong className="text-cream">{successInfo?.no}</strong> sedang diproses panitia.
+                Cek status kapan saja di halaman Riwayat Booking begitu sudah diverifikasi.
               </p>
-              <Button className="mt-4 w-full" onClick={closeDialog}>
-                Tutup
+              <Button className="mt-5 w-full" onClick={closeDialog}>
+                Pesan Lagi
               </Button>
             </div>
           )}
