@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
-import { Eye } from "lucide-react";
+import { Eye, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import Modal from "@/components/Modal";
 import { useBooking } from "@/hooks/useBooking";
 import { useToast } from "@/components/Toast";
@@ -10,12 +11,21 @@ import { buildWaLink } from "@/services/whatsapp";
 
 const BADGE_VARIANT = { kosong: "kosong", pending: "pending", verifikasi: "verifikasi", terkunci: "terisi" };
 
+const STATUS_FILTERS = [
+  { id: "semua", label: "Semua" },
+  { id: "pending", label: "Pending" },
+  { id: "verifikasi", label: "Verifikasi" },
+  { id: "terkunci", label: "Lunas" },
+];
+
 export default function AdminBooking() {
   const { categories, board, getHarga, setSlotStatus } = useBooking();
   const showToast = useToast();
   const [preview, setPreview] = useState(null);
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("semua");
 
-  const rows = useMemo(() => {
+  const allRows = useMemo(() => {
     const list = [];
     categories.forEach((c) => {
       (board[c.id] || []).forEach((slot) => {
@@ -24,6 +34,22 @@ export default function AdminBooking() {
     });
     return list;
   }, [categories, board]);
+
+  const rows = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return allRows.filter((b) => {
+      if (statusFilter !== "semua" && b.status !== statusFilter) return false;
+      if (!q) return true;
+      return (
+        (b.pemilik || "").toLowerCase().includes(q) ||
+        (b.burung || "").toLowerCase().includes(q) ||
+        (b.hp || "").toLowerCase().includes(q) ||
+        (b.kodeBooking || "").toLowerCase().includes(q) ||
+        (b.catName || "").toLowerCase().includes(q) ||
+        String(b.no).includes(q)
+      );
+    });
+  }, [allRows, query, statusFilter]);
 
   function terima(b) {
     const confirmed = setSlotStatus(b.catId, b.no, "terkunci");
@@ -37,7 +63,34 @@ export default function AdminBooking() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold text-cream">Booking ({rows.length})</h1>
+      <h1 className="font-display text-2xl font-bold text-cream">
+        Booking ({rows.length}{rows.length !== allRows.length ? ` dari ${allRows.length}` : ""})
+      </h1>
+
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Cari nama, burung, WA, kode..."
+            className="pl-9"
+          />
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {STATUS_FILTERS.map((f) => (
+            <button
+              key={f.id}
+              onClick={() => setStatusFilter(f.id)}
+              className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
+                statusFilter === f.id ? "border-gold bg-gold/10 text-cream" : "border-border text-textSoft hover:border-inkSoft"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="mt-4 overflow-x-auto rounded-card border border-border bg-card">
         <table className="w-full text-sm">
@@ -89,8 +142,8 @@ export default function AdminBooking() {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-3 py-6 text-center text-muted">
-                  Belum ada pendaftaran.
+                <td colSpan={9} className="px-3 py-6 text-center text-muted">
+                  {allRows.length === 0 ? "Belum ada pendaftaran." : "Tidak ada hasil yang cocok. Coba kata kunci lain."}
                 </td>
               </tr>
             )}
