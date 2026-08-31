@@ -19,7 +19,7 @@ const STEPS = [
 
 export default function Landing() {
   const { categories, board, getHarga, getJadwal, getSlotCount } = useBooking();
-  const { headerColor, contactWhatsapp } = useSettings();
+  const { headerColor, contactWhatsapp, announcements } = useSettings();
   const { posts } = usePosts();
   const { photos } = usePhotos();
   const [, forceTick] = useState(0);
@@ -78,7 +78,7 @@ export default function Landing() {
         </div>
       </motion.section>
 
-      <Ticker items={[]} />
+      <Ticker items={announcements} />
 
       {/* Jadwal & tiket gantangan */}
       <section className="border-t border-border px-6 py-10">

@@ -3,12 +3,15 @@ import { Bird, History, User } from "lucide-react";
 import Header from "@/components/Header";
 import DashboardCard from "@/components/DashboardCard";
 import BookingCard from "@/components/BookingCard";
+import Ticker from "@/components/Ticker";
 import { useAuth } from "@/hooks/useAuth.jsx";
 import { useBooking } from "@/hooks/useBooking";
+import { useSettings } from "@/hooks/useSettings";
 
 export default function Dashboard() {
   const { currentUser } = useAuth();
   const { categories, board, getHarga } = useBooking();
+  const { announcements } = useSettings();
 
   const myBookings = [];
   categories.forEach((c) => {
@@ -24,6 +27,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-bg">
       <Header subtitle="Dashboard Peserta" />
+      <Ticker items={announcements} />
       <main className="px-5 py-8">
         <h1 className="font-display text-2xl font-bold">Halo, {currentUser?.nama} 👋</h1>
         <p className="mt-1 text-sm text-muted">Selamat datang kembali di gantangan.</p>
