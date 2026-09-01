@@ -15,6 +15,7 @@ import { useToast } from "@/components/Toast";
 import { formatRupiah, formatMMSS } from "@/utils/format";
 import { formatTanggalPanjang } from "@/utils/date";
 import { HOLD_MINUTES, HOLD_MS } from "@/constants";
+import { getItem, setItem, removeItem } from "@/services/storage";
 
 const METHOD_TABS = [
   { id: "Bank", label: "Transfer Bank", icon: Landmark },
@@ -53,15 +54,33 @@ export default function Booking() {
   function openCategory(id) {
     setActiveCat(id);
     setSelectedNo(null);
-    setForm({
+    const defaultForm = {
       namaPeserta: currentUser?.nama || "",
       whatsapp: currentUser?.hp || "",
       burung: "",
       namaPemilik: "",
       alamat: "",
       catatan: "",
+    };
+    getItem(`bookingDraft:${id}`, null).then((draft) => {
+      if (draft) {
+        setForm(draft);
+        showToast("ok", "Draf isian sebelumnya dipulihkan.");
+      } else {
+        setForm(defaultForm);
+      }
     });
   }
+
+  // Simpan draf otomatis tiap kali isian berubah, biar tidak hilang kalau
+  // HP nge-lag / browser ke-close tidak sengaja sebelum sempat submit.
+  useEffect(() => {
+    if (!activeCat) return;
+    const isEmpty = !form.namaPeserta && !form.whatsapp && !form.burung && !form.namaPemilik && !form.alamat && !form.catatan;
+    if (isEmpty) return;
+    const t = setTimeout(() => setItem(`bookingDraft:${activeCat}`, form), 400);
+    return () => clearTimeout(t);
+  }, [form, activeCat]);
 
   function handleSlotClick(slot) {
     if (slot.status !== "kosong") {
@@ -104,6 +123,7 @@ export default function Booking() {
       return;
     }
     setSuccessInfo({ catId: cat.id, no: selectedNo, catName: cat.name });
+    removeItem(`bookingDraft:${cat.id}`);
     setPayMethod("Bank");
     setPayStep("confirm");
     setSelectedNo(null);
