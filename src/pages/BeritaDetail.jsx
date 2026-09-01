@@ -30,7 +30,7 @@ export default function BeritaDetail() {
                 <CalendarDays className="h-3.5 w-3.5" />
                 {new Date(post.createdAt).toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
               </div>
-              {post.image && <img src={post.image} alt={post.title} className="mt-4 w-full rounded-card object-cover" />}
+              {post.image && <img src={post.image} alt={post.title} loading="lazy" className="mt-4 w-full rounded-card object-cover" />}
               <div className="mt-5 whitespace-pre-wrap text-[15px] leading-relaxed text-textSoft">{post.content}</div>
             </article>
 
@@ -41,7 +41,7 @@ export default function BeritaDetail() {
                   {related.map((p) => (
                     <Link key={p.id} to={`/berita/${p.id}`} className="group flex gap-3 py-3 first:pt-0">
                       {p.image ? (
-                        <img src={p.image} alt={p.title} className="h-16 w-20 shrink-0 rounded-lg object-cover" />
+                        <img src={p.image} alt={p.title} loading="lazy" className="h-16 w-20 shrink-0 rounded-lg object-cover" />
                       ) : (
                         <div className="h-16 w-20 shrink-0 rounded-lg bg-ink/10" />
                       )}

@@ -30,6 +30,7 @@ export default function Berita() {
                 <img
                   src={p.image}
                   alt={p.title}
+                  loading={i === 0 ? "eager" : "lazy"}
                   className={i === 0 ? "h-48 w-full rounded-card object-cover sm:h-32 sm:w-48 sm:shrink-0" : "h-20 w-24 shrink-0 rounded-lg object-cover"}
                 />
               ) : (

@@ -31,6 +31,7 @@ export default function Galeri() {
               <img
                 src={p.image}
                 alt={p.caption || "Foto galeri"}
+                loading="lazy"
                 className="aspect-square w-full object-cover transition-transform group-hover:scale-105"
               />
               {p.caption && (

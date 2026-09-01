@@ -179,7 +179,7 @@ export default function Landing() {
                   {posts.slice(1, 5).map((p) => (
                     <Link key={p.id} to={`/berita/${p.id}`} className="group flex gap-3 py-3 first:pt-0">
                       {p.image ? (
-                        <img src={p.image} alt={p.title} className="h-16 w-20 shrink-0 rounded-lg object-cover" />
+                        <img src={p.image} alt={p.title} loading="lazy" className="h-16 w-20 shrink-0 rounded-lg object-cover" />
                       ) : (
                         <div className="h-16 w-20 shrink-0 rounded-lg bg-ink/10" />
                       )}
@@ -216,6 +216,7 @@ export default function Landing() {
                   <img
                     src={p.image}
                     alt={p.caption || "Foto galeri"}
+                    loading="lazy"
                     className="aspect-square w-full object-cover transition-transform group-hover:scale-105"
                   />
                 </Link>
