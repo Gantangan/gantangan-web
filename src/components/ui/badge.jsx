@@ -6,9 +6,9 @@ const badgeVariants = cva("inline-flex items-center rounded-full px-2.5 py-0.5 t
   variants: {
     variant: {
       default: "bg-ink text-cream",
-      kosong: "bg-statusKosong/15 text-emerald-700",
-      pending: "bg-statusPending/20 text-amber-700",
-      verifikasi: "bg-statusVerifikasi/15 text-blue-700",
+      kosong: "bg-statusKosong/15 text-emerald-300",
+      pending: "bg-statusPending/20 text-amber-300",
+      verifikasi: "bg-statusVerifikasi/15 text-blue-300",
       terisi: "bg-statusTerisi/15 text-red-400",
     },
   },

@@ -125,7 +125,7 @@ export default function AdminBooking() {
                       <Eye className="h-4 w-4" />
                     </button>
                   ) : b.catatanTransfer ? (
-                    <span className="font-mono text-xs text-blue-700">{b.catatanTransfer}</span>
+                    <span className="font-mono text-xs text-blue-300">{b.catatanTransfer}</span>
                   ) : (
                     "-"
                   )}

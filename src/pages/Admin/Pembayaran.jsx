@@ -37,9 +37,9 @@ export default function AdminPembayaran() {
       <h1 className="font-display text-2xl font-bold text-cream">Pembayaran</h1>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">✅ Transfer Bank</span>
-        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">✅ QRIS</span>
-        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">✅ E-Wallet</span>
+        <span className="rounded-full bg-statusKosong/15 px-3 py-1 text-xs font-semibold text-emerald-300">✅ Transfer Bank</span>
+        <span className="rounded-full bg-statusKosong/15 px-3 py-1 text-xs font-semibold text-emerald-300">✅ QRIS</span>
+        <span className="rounded-full bg-statusKosong/15 px-3 py-1 text-xs font-semibold text-emerald-300">✅ E-Wallet</span>
       </div>
       <p className="mt-2 text-sm text-muted">Daftar pembayaran yang butuh tindakan (menunggu transfer / sedang diverifikasi).</p>
 
