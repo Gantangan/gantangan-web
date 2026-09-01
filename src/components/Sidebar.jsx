@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Ticket, Bird, Users, CreditCard, FileBarChart, Settings, Target, LogOut, Newspaper, Image } from "lucide-react";
+import { LayoutDashboard, Ticket, Bird, Users, CreditCard, FileBarChart, Settings, Target, LogOut, Newspaper, Image, QrCode } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth.jsx";
 import { useSettings } from "@/hooks/useSettings";
 import Logo from "@/components/Logo";
@@ -7,6 +7,7 @@ import Logo from "@/components/Logo";
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/booking", label: "Booking", icon: Ticket },
+  { to: "/admin/scan", label: "Scan QR", icon: QrCode },
   { to: "/admin/kategori", label: "Kategori", icon: Bird },
   { to: "/admin/postingan", label: "Postingan", icon: Newspaper },
   { to: "/admin/galeri", label: "Galeri", icon: Image },

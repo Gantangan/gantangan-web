@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import BookingCard from "@/components/BookingCard";
 import PaymentCard from "@/components/PaymentCard";
 import Modal from "@/components/Modal";
+import QRTicket from "@/components/QRTicket";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth.jsx";
@@ -22,6 +23,7 @@ export default function Riwayat() {
   const [uploadTarget, setUploadTarget] = useState(null); // {catId, no}
   const [kodeText, setKodeText] = useState("");
   const [payingOnline, setPayingOnline] = useState(false);
+  const [ticketTarget, setTicketTarget] = useState(null); // booking yang tiketnya lagi dilihat
 
   const myBookings = [];
   categories.forEach((c) => {
@@ -108,11 +110,15 @@ export default function Riwayat() {
                   booking={b}
                   nominal={nominal}
                   right={
-                    b.status === "pending" && (
+                    b.status === "pending" ? (
                       <Button size="sm" variant="primary" onClick={() => setUploadTarget({ catId: b.catId, no: b.no })}>
                         Upload Bukti
                       </Button>
-                    )
+                    ) : b.status === "terkunci" ? (
+                      <Button size="sm" variant="ghost" className="border-gold text-gold" onClick={() => setTicketTarget(b)}>
+                        🎫 Lihat Tiket
+                      </Button>
+                    ) : null
                   }
                 />
               );
@@ -166,6 +172,26 @@ export default function Riwayat() {
                 </div>
               </div>
             )}
+          </div>
+        )}
+      </Modal>
+
+      <Modal
+        open={!!ticketTarget}
+        onOpenChange={(open) => !open && setTicketTarget(null)}
+        title={ticketTarget ? `Tiket — ${ticketTarget.catName}` : ""}
+        description="Tunjukkan QR ini ke panitia di lokasi untuk check-in."
+      >
+        {ticketTarget && (
+          <div className="flex flex-col items-center gap-3 py-2">
+            <QRTicket value={ticketTarget.kodeBooking} />
+            <div className="text-center">
+              <div className="font-mono text-sm font-bold text-cream">{ticketTarget.kodeBooking}</div>
+              <div className="mt-1 text-xs text-muted">
+                Nomor <strong className="text-cream">{ticketTarget.no}</strong> — {ticketTarget.pemilik}
+              </div>
+              {ticketTarget.hadir && <div className="mt-1 text-xs font-bold text-emerald-300">✓ Sudah check-in di lokasi</div>}
+            </div>
           </div>
         )}
       </Modal>

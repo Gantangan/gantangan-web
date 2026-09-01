@@ -22,6 +22,8 @@ function emptySlot(no) {
     buktiTransfer: null,
     catatanTransfer: null,
     confirmedAt: null,
+    hadir: false, // sudah check-in di lokasi (via scan QR)
+    checkinAt: null,
   };
 }
 
@@ -261,6 +263,19 @@ export function BookingProvider({ children }) {
     [categories, board, getHarga]
   );
 
+  const markHadir = useCallback(
+    (catId, no) => {
+      const idx = no - 1;
+      if (!board[catId] || !board[catId][idx]) return { ok: false, error: "Data tidak ditemukan." };
+      const next = { ...board };
+      next[catId] = [...next[catId]];
+      next[catId][idx] = { ...next[catId][idx], hadir: true, checkinAt: Date.now() };
+      persistBoard(next);
+      return { ok: true };
+    },
+    [board, persistBoard]
+  );
+
   return (
     <BookingContext.Provider
       value={{
@@ -281,6 +296,7 @@ export function BookingProvider({ children }) {
         resizeCategory,
         updateCategoryConfig,
         findBooking,
+        markHadir,
       }}
     >
       {children}

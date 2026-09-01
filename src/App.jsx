@@ -24,6 +24,7 @@ const Settings = lazy(() => import("@/pages/Settings"));
 const Admin = lazy(() => import("@/pages/Admin"));
 const AdminDashboard = lazy(() => import("@/pages/Admin/Dashboard"));
 const AdminBooking = lazy(() => import("@/pages/Admin/Booking"));
+const AdminScan = lazy(() => import("@/pages/Admin/Scan"));
 const AdminKategori = lazy(() => import("@/pages/Admin/Kategori"));
 const AdminPeserta = lazy(() => import("@/pages/Admin/Peserta"));
 const AdminPembayaran = lazy(() => import("@/pages/Admin/Pembayaran"));
@@ -101,6 +102,7 @@ export default function App() {
                 >
                   <Route index element={<AdminDashboard />} />
                   <Route path="booking" element={<AdminBooking />} />
+                  <Route path="scan" element={<AdminScan />} />
                   <Route path="kategori" element={<AdminKategori />} />
                   <Route path="peserta" element={<AdminPeserta />} />
                   <Route path="pembayaran" element={<AdminPembayaran />} />
