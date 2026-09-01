@@ -24,6 +24,7 @@ export default function Riwayat() {
   const [kodeText, setKodeText] = useState("");
   const [payingOnline, setPayingOnline] = useState(false);
   const [ticketTarget, setTicketTarget] = useState(null); // booking yang tiketnya lagi dilihat
+  const [qrDataUrl, setQrDataUrl] = useState(null);
 
   const myBookings = [];
   categories.forEach((c) => {
@@ -115,7 +116,7 @@ export default function Riwayat() {
                         Upload Bukti
                       </Button>
                     ) : b.status === "terkunci" ? (
-                      <Button size="sm" variant="ghost" className="border-gold text-gold" onClick={() => setTicketTarget(b)}>
+                      <Button size="sm" variant="ghost" className="border-gold text-gold" onClick={() => { setTicketTarget(b); setQrDataUrl(null); }}>
                         🎫 Lihat Tiket
                       </Button>
                     ) : null
@@ -180,11 +181,11 @@ export default function Riwayat() {
         open={!!ticketTarget}
         onOpenChange={(open) => !open && setTicketTarget(null)}
         title={ticketTarget ? `Tiket — ${ticketTarget.catName}` : ""}
-        description="Tunjukkan QR ini ke panitia di lokasi untuk check-in."
+        description="Tunjukkan QR ini ke panitia di lokasi untuk check-in. Download dulu biar tetap bisa dibuka tanpa internet."
       >
         {ticketTarget && (
           <div className="flex flex-col items-center gap-3 py-2">
-            <QRTicket value={ticketTarget.kodeBooking} />
+            <QRTicket value={ticketTarget.kodeBooking} onReady={setQrDataUrl} />
             <div className="text-center">
               <div className="font-mono text-sm font-bold text-cream">{ticketTarget.kodeBooking}</div>
               <div className="mt-1 text-xs text-muted">
@@ -192,6 +193,15 @@ export default function Riwayat() {
               </div>
               {ticketTarget.hadir && <div className="mt-1 text-xs font-bold text-emerald-300">✓ Sudah check-in di lokasi</div>}
             </div>
+            {qrDataUrl && (
+              <a
+                href={qrDataUrl}
+                download={`tiket-${ticketTarget.kodeBooking}.png`}
+                className="w-full rounded-lg bg-gold px-4 py-2.5 text-center text-sm font-bold text-ink hover:brightness-95"
+              >
+                ⬇ Download QR
+              </a>
+            )}
           </div>
         )}
       </Modal>
