@@ -25,7 +25,7 @@ const METHOD_TABS = [
 
 export default function Booking() {
   const { currentUser } = useAuth();
-  const { categories, board, getHarga, getDeskripsi, getJadwal, getSlotCount, isBookingClosed, bookSlot, submitBukti } = useBooking();
+  const { categories, board, getHarga, getDeskripsi, getJadwal, getCutoffHari, getSlotCount, isBookingClosed, bookSlot, submitBukti } = useBooking();
   const { paymentAccounts } = useSettings();
   const showToast = useToast();
   const navigate = useNavigate();
@@ -93,7 +93,7 @@ export default function Booking() {
       return;
     }
     if (isBookingClosed(cat.id)) {
-      showToast("error", "Pendaftaran ditutup H-2 sebelum tanggal event.");
+      showToast("error", `Pendaftaran ditutup H-${getCutoffHari(cat.id)} sebelum tanggal event.`);
       return;
     }
     setSelectedNo(slot.no);

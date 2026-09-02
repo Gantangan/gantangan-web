@@ -8,11 +8,11 @@ export function isHariLomba(dateStr) {
   return HARI_LOMBA.includes(day);
 }
 
-export function isBookingClosed(jadwal) {
+export function isBookingClosed(jadwal, cutoffHari = BOOKING_CUTOFF_HARI) {
   if (!jadwal) return false;
   const eventDate = new Date(jadwal + "T00:00:00");
   const cutoff = new Date(eventDate);
-  cutoff.setDate(cutoff.getDate() - BOOKING_CUTOFF_HARI);
+  cutoff.setDate(cutoff.getDate() - Number(cutoffHari));
   cutoff.setHours(23, 59, 59, 999);
   return Date.now() > cutoff.getTime();
 }

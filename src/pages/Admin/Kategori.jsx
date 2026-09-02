@@ -6,7 +6,7 @@ import { useToast } from "@/components/Toast";
 import { HARI_LABEL, HARI_LOMBA, formatTanggalPanjang } from "@/utils/date";
 
 export default function AdminKategori() {
-  const { categories, board, getHarga, getJadwal, getDeskripsi, getSlotCount, isBookingClosed, addCategory, renameCategory, removeCategory, resizeCategory, updateCategoryConfig } = useBooking();
+  const { categories, board, getHarga, getJadwal, getDeskripsi, getCutoffHari, getSlotCount, isBookingClosed, addCategory, renameCategory, removeCategory, resizeCategory, updateCategoryConfig } = useBooking();
   const showToast = useToast();
   const [newName, setNewName] = useState("");
   const [selectedId, setSelectedId] = useState(categories[0]?.id || "");
@@ -120,6 +120,26 @@ export default function AdminKategori() {
               {isBookingClosed(selected.id) && <span className="ml-1 font-bold text-red-400">— pendaftaran ditutup</span>}
             </p>
           )}
+
+          <label className="mb-1 mt-3 block text-xs font-medium text-muted">Tutup Pendaftaran (H-berapa)</label>
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              min="0"
+              max="30"
+              defaultValue={getCutoffHari(selected.id)}
+              key={selected.id + "-cutoff"}
+              onBlur={(e) => {
+                const val = Math.max(0, Math.min(30, Math.floor(Number(e.target.value) || 0)));
+                updateCategoryConfig(selected.id, { cutoffHari: val });
+              }}
+              className="w-24"
+            />
+            <span className="text-xs text-muted">hari sebelum tanggal event</span>
+          </div>
+          <p className="mt-1 text-[11px] text-muted">
+            Contoh: isi 0 kalau boleh daftar sampai hari-H, isi 5 kalau harus tutup 5 hari sebelumnya. Default 2 hari (H-2).
+          </p>
 
           <label className="mb-1 mt-3 block text-xs font-medium text-muted">Deskripsi Event (opsional)</label>
           <textarea
