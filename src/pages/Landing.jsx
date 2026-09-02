@@ -89,7 +89,7 @@ export default function Landing() {
           {jadwalCategories.length === 0 ? (
             <p className="mt-6 text-sm text-muted">Jadwal event belum diatur panitia.</p>
           ) : (
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
               {jadwalCategories.map((c) => {
                 const d = new Date(c.jadwal + "T00:00:00");
                 return (
@@ -98,24 +98,24 @@ export default function Landing() {
                     to="/daftar"
                     className="group overflow-hidden rounded-card border border-border bg-card transition-colors hover:border-gold/60"
                   >
-                    <div className="relative h-32 w-full" style={{ background: `linear-gradient(135deg, ${c.tagColor}55, ${c.tagColor}11)` }}>
-                      <span className="absolute right-2 top-2 rounded-full bg-gold px-2.5 py-0.5 text-[10px] font-bold text-ink">
+                    <div className="relative h-16 w-full sm:h-32" style={{ background: `linear-gradient(135deg, ${c.tagColor}55, ${c.tagColor}11)` }}>
+                      <span className="absolute right-1.5 top-1.5 rounded-full bg-gold px-2 py-0.5 text-[9px] font-bold text-ink sm:right-2 sm:top-2 sm:px-2.5 sm:text-[10px]">
                         {Math.max(c.sisa, 0)} sisa
                       </span>
                     </div>
-                    <div className="p-4">
-                      <div className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wide text-gold">
-                        <span className="h-2 w-2 rounded-full" style={{ background: c.tagColor }} />
+                    <div className="p-2.5 sm:p-4">
+                      <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-gold sm:gap-1.5 sm:text-[10.5px]">
+                        <span className="h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2" style={{ background: c.tagColor }} />
                         Kelas {c.name}
                       </div>
-                      <div className="mt-1 font-display text-base font-bold leading-snug group-hover:text-goldDeep">
-                        Gantangan Kebokicak — {c.name}
+                      <div className="mt-1 font-display text-xs font-bold leading-snug group-hover:text-goldDeep sm:text-base">
+                        {c.name}
                       </div>
-                      <div className="mt-2 flex items-center gap-1 text-[11px] text-textSoft">
-                        <CalendarDays className="h-3 w-3" />
-                        {HARI_LABEL[d.getDay()]}, {formatTanggalPanjang(c.jadwal)}
+                      <div className="mt-1 flex items-center gap-1 text-[9.5px] text-textSoft sm:mt-2 sm:text-[11px]">
+                        <CalendarDays className="h-2.5 w-2.5 shrink-0 sm:h-3 sm:w-3" />
+                        <span className="truncate">{formatTanggalPanjang(c.jadwal)}</span>
                       </div>
-                      <div className="mt-2 font-display text-base font-bold">{formatRupiah(c.harga)}</div>
+                      <div className="mt-1 font-display text-xs font-bold sm:mt-2 sm:text-base">{formatRupiah(c.harga)}</div>
                     </div>
                   </Link>
                 );
