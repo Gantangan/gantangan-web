@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { CalendarDays, Lock, Timer, Wallet, ClipboardList, MessageCircleMore, CheckCircle2 } from "lucide-react";
 import Ticker from "@/components/Ticker";
+import Logo from "@/components/Logo";
 import { useBooking } from "@/hooks/useBooking";
 import { useSettings } from "@/hooks/useSettings";
 import { usePosts } from "@/hooks/usePosts";
@@ -40,7 +41,7 @@ export default function Landing() {
       {/* Top bar minimal */}
       <header className="flex items-center justify-between border-b border-border px-6 py-4">
         <Link to="/" className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-gold" />
+          <Logo size={28} />
           <span className="font-display text-sm font-bold uppercase tracking-wide">Gantangan Kebokicak</span>
         </Link>
         <Link to="/daftar" className="rounded-full bg-gold px-5 py-2 text-xs font-bold text-ink hover:brightness-95">
