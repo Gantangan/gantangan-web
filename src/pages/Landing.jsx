@@ -48,6 +48,8 @@ export default function Landing() {
         </Link>
       </header>
 
+      <Ticker items={announcements} />
+
       {/* Hero */}
       <motion.section
         initial={{ opacity: 0, y: 16 }}
@@ -77,8 +79,6 @@ export default function Landing() {
           </div>
         </div>
       </motion.section>
-
-      <Ticker items={announcements} />
 
       {/* Jadwal & tiket gantangan */}
       <section className="border-t border-border px-6 py-10">
