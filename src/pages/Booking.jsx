@@ -13,7 +13,7 @@ import { useBooking } from "@/hooks/useBooking";
 import { useSettings } from "@/hooks/useSettings";
 import { useToast } from "@/components/Toast";
 import { formatRupiah, formatMMSS } from "@/utils/format";
-import { formatTanggalPanjang } from "@/utils/date";
+import { formatTanggalPanjang, formatTanggalWaktu } from "@/utils/date";
 import { HOLD_MINUTES, HOLD_MS } from "@/constants";
 import { getItem, setItem, removeItem } from "@/services/storage";
 
@@ -25,7 +25,7 @@ const METHOD_TABS = [
 
 export default function Booking() {
   const { currentUser } = useAuth();
-  const { categories, board, getHarga, getDeskripsi, getJadwal, getCutoffHari, getSlotCount, isBookingClosed, bookSlot, submitBukti } = useBooking();
+  const { categories, board, getHarga, getDeskripsi, getJadwal, getTutupPendaftaran, getSlotCount, isBookingClosed, bookSlot, submitBukti } = useBooking();
   const { paymentAccounts } = useSettings();
   const showToast = useToast();
   const navigate = useNavigate();
@@ -93,7 +93,8 @@ export default function Booking() {
       return;
     }
     if (isBookingClosed(cat.id)) {
-      showToast("error", `Pendaftaran ditutup H-${getCutoffHari(cat.id)} sebelum tanggal event.`);
+      const tutup = getTutupPendaftaran(cat.id);
+      showToast("error", `Pendaftaran ditutup sejak ${tutup ? formatTanggalWaktu(tutup) : "sebelumnya"}.`);
       return;
     }
     setSelectedNo(slot.no);

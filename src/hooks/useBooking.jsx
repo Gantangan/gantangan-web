@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { getItem, setItem } from "@/services/storage";
 import { DEFAULT_CATEGORIES, SLOTS_PER_CATEGORY, HOLD_MS, HARGA_DASAR } from "@/constants";
-import { isBookingClosed as checkClosed, BOOKING_CUTOFF_HARI } from "@/utils/date";
+import { isBookingClosed as checkClosed } from "@/utils/date";
 
 const BookingContext = createContext(null);
 
@@ -78,12 +78,12 @@ export function BookingProvider({ children }) {
   const getHarga = useCallback((catId) => categoryConfig[catId]?.harga ?? HARGA_DASAR, [categoryConfig]);
   const getJadwal = useCallback((catId) => categoryConfig[catId]?.jadwal || null, [categoryConfig]);
   const getDeskripsi = useCallback((catId) => categoryConfig[catId]?.deskripsi || "", [categoryConfig]);
-  const getCutoffHari = useCallback((catId) => categoryConfig[catId]?.cutoffHari ?? BOOKING_CUTOFF_HARI, [categoryConfig]);
+  const getTutupPendaftaran = useCallback((catId) => categoryConfig[catId]?.tutupPendaftaran || null, [categoryConfig]);
   const getSlotCount = useCallback(
     (catId) => categoryConfig[catId]?.slotCount ?? SLOTS_PER_CATEGORY,
     [categoryConfig]
   );
-  const isBookingClosed = useCallback((catId) => checkClosed(getJadwal(catId), getCutoffHari(catId)), [getJadwal, getCutoffHari]);
+  const isBookingClosed = useCallback((catId) => checkClosed(getTutupPendaftaran(catId)), [getTutupPendaftaran]);
 
   const persistBoard = useCallback((next) => {
     setBoard(next);
@@ -286,7 +286,7 @@ export function BookingProvider({ children }) {
         getHarga,
         getJadwal,
         getDeskripsi,
-        getCutoffHari,
+        getTutupPendaftaran,
         getSlotCount,
         isBookingClosed,
         bookSlot,
