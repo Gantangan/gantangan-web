@@ -89,7 +89,7 @@ export default function Landing() {
           {jadwalCategories.length === 0 ? (
             <p className="mt-6 text-sm text-muted">Jadwal event belum diatur panitia.</p>
           ) : (
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+            <div className="mt-5 grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3 sm:gap-4">
               {jadwalCategories.map((c) => {
                 const d = new Date(c.jadwal + "T00:00:00");
                 return (
