@@ -122,9 +122,19 @@ export default function AdminDashboard() {
                 </button>
               ))}
             </div>
-            <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="rounded-md border border-border px-2 py-1" />
+            <input
+              type="date"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+              className="rounded-md border border-border bg-card px-2 py-1 text-cream"
+            />
             <span className="text-muted">–</span>
-            <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="rounded-md border border-border px-2 py-1" />
+            <input
+              type="date"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              className="rounded-md border border-border bg-card px-2 py-1 text-cream"
+            />
           </div>
         </div>
         <p className="mt-2 text-xs text-muted">
