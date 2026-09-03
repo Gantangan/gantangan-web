@@ -12,6 +12,7 @@ export function SettingsProvider({ children }) {
   const [headerColor, setHeaderColorState] = useState(DEFAULT_HEADER_COLOR);
   const [heroImage, setHeroImageState] = useState(null);
   const [contactWhatsapp, setContactWhatsappState] = useState("");
+  const [pexelsApiKey, setPexelsApiKeyState] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export function SettingsProvider({ children }) {
       setHeaderColorState((await getItem("headerColor", null)) || DEFAULT_HEADER_COLOR);
       setHeroImageState((await getItem("heroImage", null)) || null);
       setContactWhatsappState((await getItem("contactWhatsapp", null)) || "");
+      setPexelsApiKeyState((await getItem("pexelsApiKey", null)) || "");
       setLoaded(true);
     })();
   }, []);
@@ -103,6 +105,11 @@ export function SettingsProvider({ children }) {
     setItem("contactWhatsapp", value);
   }, []);
 
+  const setPexelsApiKey = useCallback((value) => {
+    setPexelsApiKeyState(value);
+    setItem("pexelsApiKey", value);
+  }, []);
+
   return (
     <SettingsContext.Provider
       value={{
@@ -112,6 +119,7 @@ export function SettingsProvider({ children }) {
         headerColor,
         heroImage,
         contactWhatsapp,
+        pexelsApiKey,
         loaded,
         addAnnouncement,
         removeAnnouncement,
@@ -124,6 +132,7 @@ export function SettingsProvider({ children }) {
         setHeroImage,
         removeHeroImage,
         setContactWhatsapp,
+        setPexelsApiKey,
       }}
     >
       {children}

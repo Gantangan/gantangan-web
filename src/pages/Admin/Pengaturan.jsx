@@ -144,6 +144,8 @@ function TampilanSection() {
     removeHeroImage,
     contactWhatsapp,
     setContactWhatsapp,
+    pexelsApiKey,
+    setPexelsApiKey,
   } = useSettings();
   const showToast = useToast();
 
@@ -212,6 +214,21 @@ function TampilanSection() {
         onChange={(e) => setContactWhatsapp(e.target.value)}
         placeholder="0812-0000-1234"
         className="mt-2 w-48"
+      />
+
+      <h3 className="mt-5 text-sm font-bold text-cream">Gambar Kategori Otomatis (Pexels)</h3>
+      <p className="mt-1 text-[11px] text-muted">
+        Kalau diisi, gambar kartu kategori (Murai Batu, Kacer, dll) otomatis dicarikan foto burung yang cocok dari{" "}
+        <a href="https://www.pexels.com/api/" target="_blank" rel="noreferrer" className="text-goldDeep underline">
+          Pexels
+        </a>{" "}
+        (gratis, boleh dipakai komersial). Daftar dulu untuk dapat API key gratis.
+      </p>
+      <Input
+        value={pexelsApiKey}
+        onChange={(e) => setPexelsApiKey(e.target.value)}
+        placeholder="Tempel API key Pexels di sini"
+        className="mt-2 max-w-md"
       />
 
       <h3 className="mt-5 text-sm font-bold text-cream">Gambar Hero Banner (Landing Page)</h3>

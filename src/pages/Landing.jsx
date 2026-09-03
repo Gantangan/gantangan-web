@@ -10,6 +10,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { usePhotos } from "@/hooks/usePhotos";
 import { formatRupiah } from "@/utils/format";
 import { formatTanggalPanjang, HARI_LABEL } from "@/utils/date";
+import { fetchBirdPhoto } from "@/services/pexels";
 
 const STEPS = [
   { no: "1", title: "Pilih nomor", desc: "Nomor yang sudah dipesan tampil abu-abu dan terkunci.", icon: ClipboardList },
@@ -19,8 +20,8 @@ const STEPS = [
 ];
 
 export default function Landing() {
-  const { categories, board, getHarga, getJadwal, getSlotCount } = useBooking();
-  const { headerColor, contactWhatsapp, announcements } = useSettings();
+  const { categories, board, getHarga, getJadwal, getSlotCount, getAutoImage, updateCategoryConfig } = useBooking();
+  const { headerColor, contactWhatsapp, announcements, pexelsApiKey } = useSettings();
   const { posts } = usePosts();
   const { photos } = usePhotos();
   const [, forceTick] = useState(0);
@@ -35,6 +36,19 @@ export default function Landing() {
     .map((c) => ({ ...c, jadwal: getJadwal(c.id), harga: getHarga(c.id), sisa: getSlotCount(c.id) - (board[c.id] || []).filter((s) => s.status !== "kosong").length }))
     .filter((c) => c.jadwal)
     .sort((a, b) => a.jadwal.localeCompare(b.jadwal));
+
+  // Cari otomatis foto burung yang cocok (sekali per kategori, hasilnya di-cache
+  // biar tidak nge-fetch berulang tiap buka halaman).
+  useEffect(() => {
+    if (!pexelsApiKey) return;
+    jadwalCategories.forEach((c) => {
+      if (getAutoImage(c.id)) return;
+      fetchBirdPhoto(c.name, pexelsApiKey).then((url) => {
+        if (url) updateCategoryConfig(c.id, { autoImage: url });
+      });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pexelsApiKey, categories.length]);
 
   return (
     <div className="min-h-screen bg-bg font-body text-cream">
@@ -102,7 +116,14 @@ export default function Landing() {
                     to="/daftar"
                     className="group overflow-hidden rounded-card border border-border bg-card transition-colors hover:border-gold/60"
                   >
-                    <div className="relative h-16 w-full sm:h-32" style={{ background: `linear-gradient(135deg, ${c.tagColor}55, ${c.tagColor}11)` }}>
+                    <div
+                      className="relative h-16 w-full bg-cover bg-center sm:h-32"
+                      style={
+                        getAutoImage(c.id)
+                          ? { backgroundImage: `url(${getAutoImage(c.id)})` }
+                          : { background: `linear-gradient(135deg, ${c.tagColor}55, ${c.tagColor}11)` }
+                      }
+                    >
                       <span className="absolute right-1.5 top-1.5 rounded-full bg-gold px-2 py-0.5 text-[9px] font-bold text-ink sm:right-2 sm:top-2 sm:px-2.5 sm:text-[10px]">
                         {Math.max(c.sisa, 0)} sisa
                       </span>

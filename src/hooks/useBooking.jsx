@@ -78,6 +78,7 @@ export function BookingProvider({ children }) {
   const getHarga = useCallback((catId) => categoryConfig[catId]?.harga ?? HARGA_DASAR, [categoryConfig]);
   const getJadwal = useCallback((catId) => categoryConfig[catId]?.jadwal || null, [categoryConfig]);
   const getDeskripsi = useCallback((catId) => categoryConfig[catId]?.deskripsi || "", [categoryConfig]);
+  const getAutoImage = useCallback((catId) => categoryConfig[catId]?.autoImage || null, [categoryConfig]);
   const getTutupPendaftaran = useCallback((catId) => categoryConfig[catId]?.tutupPendaftaran || null, [categoryConfig]);
   const getSlotCount = useCallback(
     (catId) => categoryConfig[catId]?.slotCount ?? SLOTS_PER_CATEGORY,
@@ -286,6 +287,7 @@ export function BookingProvider({ children }) {
         getHarga,
         getJadwal,
         getDeskripsi,
+        getAutoImage,
         getTutupPendaftaran,
         getSlotCount,
         isBookingClosed,
