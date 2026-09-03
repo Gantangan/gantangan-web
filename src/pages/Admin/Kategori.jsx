@@ -2,19 +2,57 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useBooking } from "@/hooks/useBooking";
+import { useSettings } from "@/hooks/useSettings";
 import { useToast } from "@/components/Toast";
+import { compressImage } from "@/utils/image";
+import { fetchBirdPhoto } from "@/services/pexels";
 import { HARI_LABEL, HARI_LOMBA, formatTanggalPanjang } from "@/utils/date";
 
 export default function AdminKategori() {
-  const { categories, board, getHarga, getJadwal, getDeskripsi, getTutupPendaftaran, getSlotCount, isBookingClosed, addCategory, renameCategory, removeCategory, resizeCategory, updateCategoryConfig } = useBooking();
+  const { categories, board, getHarga, getJadwal, getDeskripsi, getAutoImage, getTutupPendaftaran, getSlotCount, isBookingClosed, addCategory, renameCategory, removeCategory, resizeCategory, updateCategoryConfig } = useBooking();
+  const { pexelsApiKey } = useSettings();
   const showToast = useToast();
   const [newName, setNewName] = useState("");
   const [selectedId, setSelectedId] = useState(categories[0]?.id || "");
   const [editName, setEditName] = useState("");
   const [slotInput, setSlotInput] = useState("");
+  const [searching, setSearching] = useState(false);
 
   const selected = categories.find((c) => c.id === selectedId) || categories[0];
   const terisi = selected ? (board[selected.id] || []).filter((s) => s.status !== "kosong").length : 0;
+
+  async function handleResearch() {
+    if (!pexelsApiKey) {
+      showToast("error", "Isi dulu API key Pexels di Pengaturan → Tampilan.");
+      return;
+    }
+    setSearching(true);
+    const url = await fetchBirdPhoto(selected.name, pexelsApiKey);
+    setSearching(false);
+    if (url) {
+      updateCategoryConfig(selected.id, { autoImage: url });
+      showToast("ok", "Gambar berhasil diperbarui.");
+    } else {
+      showToast("error", "Tidak ketemu foto yang cocok. Coba upload manual saja.");
+    }
+  }
+
+  async function handleManualUpload(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showToast("error", "File harus berupa gambar (JPG/PNG).");
+      return;
+    }
+    try {
+      const compressed = await compressImage(file, { maxSize: 800, quality: 0.85 });
+      updateCategoryConfig(selected.id, { autoImage: compressed });
+      showToast("ok", "Gambar berhasil diganti.");
+    } catch (err) {
+      showToast("error", err.message || "Gagal memproses gambar.");
+    }
+  }
 
   function handleAdd() {
     if (!newName.trim()) return;
@@ -130,6 +168,32 @@ export default function AdminKategori() {
           />
           <p className="mt-1 text-[11px] text-muted">
             Setelah tanggal &amp; jam ini, peserta tidak bisa pesan nomor lagi. Kosongkan kalau tidak mau dibatasi.
+          </p>
+
+          <label className="mb-1 mt-3 block text-xs font-medium text-muted">Gambar Kategori</label>
+          {getAutoImage(selected.id) && (
+            <img src={getAutoImage(selected.id)} alt={selected.name} className="mb-2 h-28 w-full rounded-lg object-cover" />
+          )}
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="ghost" disabled={searching} onClick={handleResearch}>
+              {searching ? "Mencari…" : "🔄 Cari Ulang (Pexels)"}
+            </Button>
+            <label className="cursor-pointer rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-cream hover:bg-card">
+              📤 Upload Manual
+              <input type="file" accept="image/*" className="hidden" onChange={handleManualUpload} />
+            </label>
+            {getAutoImage(selected.id) && (
+              <button
+                onClick={() => updateCategoryConfig(selected.id, { autoImage: "" })}
+                className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-card"
+              >
+                ✕ Hapus
+              </button>
+            )}
+          </div>
+          <p className="mt-1 text-[11px] text-muted">
+            Nama kicau mania (Murai Batu, Kacer, dll) kadang tidak dikenali situs foto internasional, jadi hasil
+            pencarian otomatis bisa meleset. Kalau kurang pas, upload foto sendiri saja.
           </p>
 
           <label className="mb-1 mt-3 block text-xs font-medium text-muted">Deskripsi Event (opsional)</label>
