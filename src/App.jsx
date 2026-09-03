@@ -6,32 +6,49 @@ import { SettingsProvider } from "@/hooks/useSettings";
 import { PostsProvider } from "@/hooks/usePosts";
 import { PhotosProvider } from "@/hooks/usePhotos";
 import { ToastProvider } from "@/components/Toast";
+import ErrorBoundary from "@/components/ErrorBoundary";
+
+// Kalau chunk gagal dimuat (biasanya karena ada versi baru web ini ter-deploy
+// sementara browser masih nyimpan cache versi lama), otomatis reload SEKALI
+// buat ambil versi terbaru — biar peserta tidak lihat halaman blank.
+function lazyWithReload(importer) {
+  return lazy(() =>
+    importer().catch((err) => {
+      const key = "chunk-reload-attempted";
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, "1");
+        window.location.reload();
+      }
+      throw err;
+    })
+  );
+}
 
 // Lazy-load semua halaman: tiap rute baru diunduh browser saat benar-benar
 // dibuka, bukan sekaligus di awal. Peserta tidak perlu download kode Admin
 // (chart, laporan, dsb), dan sebaliknya — mempercepat loading pertama.
-const Landing = lazy(() => import("@/pages/Landing"));
-const Login = lazy(() => import("@/pages/Login"));
-const Register = lazy(() => import("@/pages/Register"));
-const Dashboard = lazy(() => import("@/pages/Dashboard"));
-const Booking = lazy(() => import("@/pages/Booking"));
-const CekPesanan = lazy(() => import("@/pages/CekPesanan"));
-const Berita = lazy(() => import("@/pages/Berita"));
-const BeritaDetail = lazy(() => import("@/pages/BeritaDetail"));
-const Galeri = lazy(() => import("@/pages/Galeri"));
-const Riwayat = lazy(() => import("@/pages/Riwayat"));
-const Settings = lazy(() => import("@/pages/Settings"));
-const Admin = lazy(() => import("@/pages/Admin"));
-const AdminDashboard = lazy(() => import("@/pages/Admin/Dashboard"));
-const AdminBooking = lazy(() => import("@/pages/Admin/Booking"));
-const AdminScan = lazy(() => import("@/pages/Admin/Scan"));
-const AdminKategori = lazy(() => import("@/pages/Admin/Kategori"));
-const AdminPeserta = lazy(() => import("@/pages/Admin/Peserta"));
-const AdminPembayaran = lazy(() => import("@/pages/Admin/Pembayaran"));
-const AdminLaporan = lazy(() => import("@/pages/Admin/Laporan"));
-const AdminPengaturan = lazy(() => import("@/pages/Admin/Pengaturan"));
-const AdminPostingan = lazy(() => import("@/pages/Admin/Postingan"));
-const AdminGaleri = lazy(() => import("@/pages/Admin/Galeri"));
+const Landing = lazyWithReload(() => import("@/pages/Landing"));
+const Login = lazyWithReload(() => import("@/pages/Login"));
+const Register = lazyWithReload(() => import("@/pages/Register"));
+const Dashboard = lazyWithReload(() => import("@/pages/Dashboard"));
+const Booking = lazyWithReload(() => import("@/pages/Booking"));
+const CekPesanan = lazyWithReload(() => import("@/pages/CekPesanan"));
+const Berita = lazyWithReload(() => import("@/pages/Berita"));
+const BeritaDetail = lazyWithReload(() => import("@/pages/BeritaDetail"));
+const Galeri = lazyWithReload(() => import("@/pages/Galeri"));
+const Riwayat = lazyWithReload(() => import("@/pages/Riwayat"));
+const Settings = lazyWithReload(() => import("@/pages/Settings"));
+const Admin = lazyWithReload(() => import("@/pages/Admin"));
+const AdminDashboard = lazyWithReload(() => import("@/pages/Admin/Dashboard"));
+const AdminBooking = lazyWithReload(() => import("@/pages/Admin/Booking"));
+const AdminScan = lazyWithReload(() => import("@/pages/Admin/Scan"));
+const AdminKategori = lazyWithReload(() => import("@/pages/Admin/Kategori"));
+const AdminPeserta = lazyWithReload(() => import("@/pages/Admin/Peserta"));
+const AdminPembayaran = lazyWithReload(() => import("@/pages/Admin/Pembayaran"));
+const AdminLaporan = lazyWithReload(() => import("@/pages/Admin/Laporan"));
+const AdminPengaturan = lazyWithReload(() => import("@/pages/Admin/Pengaturan"));
+const AdminPostingan = lazyWithReload(() => import("@/pages/Admin/Postingan"));
+const AdminGaleri = lazyWithReload(() => import("@/pages/Admin/Galeri"));
 
 function PrivateRoute({ children, role }) {
   const { currentUser, loaded } = useAuth();
@@ -51,6 +68,7 @@ function PageLoader() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <AuthProvider>
       <BookingProvider>
         <SettingsProvider>
@@ -121,5 +139,6 @@ export default function App() {
         </SettingsProvider>
       </BookingProvider>
     </AuthProvider>
+    </ErrorBoundary>
   );
 }
