@@ -44,7 +44,10 @@ export default function Landing() {
           <Logo size={28} />
           <span className="font-display text-sm font-bold uppercase tracking-wide">Gantangan Kebokicak</span>
         </Link>
-        <Link to="/daftar" className="rounded-full bg-gold px-5 py-2 text-xs font-bold text-ink hover:brightness-95">
+        <Link
+          to="/daftar"
+          className="rounded-full bg-gold px-3.5 py-1.5 text-[11px] font-bold text-ink hover:brightness-95 sm:px-5 sm:py-2 sm:text-xs"
+        >
           Pesan Tiket
         </Link>
       </header>
