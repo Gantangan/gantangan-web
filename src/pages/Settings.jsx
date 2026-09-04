@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -34,7 +36,16 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <Header subtitle="Profil Saya" />
+      <Header
+        subtitle="Profil Saya"
+        actions={
+          <Link to="/dashboard">
+            <Button variant="ghost" size="sm" className="border-inkSoft text-cream">
+              <ArrowLeft className="mr-1 h-3.5 w-3.5" /> Dashboard
+            </Button>
+          </Link>
+        }
+      />
       <main className="px-5 py-8">
         <h1 className="font-display text-2xl font-bold">Profil Saya</h1>
 

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import BookingCard from "@/components/BookingCard";
 import PaymentCard from "@/components/PaymentCard";
@@ -93,7 +95,16 @@ export default function Riwayat() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <Header subtitle="Riwayat Booking" />
+      <Header
+        subtitle="Riwayat Booking"
+        actions={
+          <Link to="/dashboard">
+            <Button variant="ghost" size="sm" className="border-inkSoft text-cream">
+              <ArrowLeft className="mr-1 h-3.5 w-3.5" /> Dashboard
+            </Button>
+          </Link>
+        }
+      />
       <main className="px-5 py-8">
         <h1 className="font-display text-2xl font-bold">Riwayat Saya ({myBookings.length})</h1>
 
