@@ -40,8 +40,8 @@ export default function Settings() {
         subtitle="Profil Saya"
         actions={
           <Link to="/dashboard">
-            <Button variant="ghost" size="sm" className="border-inkSoft text-cream">
-              <ArrowLeft className="mr-1 h-3.5 w-3.5" /> Dashboard
+            <Button variant="ghost" size="sm" className="border-inkSoft px-2 text-cream sm:px-3">
+              <ArrowLeft className="h-3.5 w-3.5 sm:mr-1" /> <span className="hidden sm:inline">Dashboard</span>
             </Button>
           </Link>
         }
