@@ -3,11 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, LayoutDashboard, CalendarDays, MapPin, Landmark, Smartphone, QrCode } from "lucide-react";
 import Header from "@/components/Header";
 import SlotGrid from "@/components/SlotGrid";
+import { SLOT_STATUS, SLOT_SELECTED } from "@/components/SlotButton";
 import PaymentCard from "@/components/PaymentCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth.jsx";
 import { useBooking } from "@/hooks/useBooking";
 import { useSettings } from "@/hooks/useSettings";
@@ -243,11 +243,15 @@ export default function Booking() {
               <div className="mt-4">
                 <SlotGrid slots={slots} onSlotClick={handleSlotClick} selectedNo={selectedNo} />
               </div>
-              <div className="mt-5 flex flex-wrap gap-3 text-xs">
-                <span className="flex items-center gap-1"><Badge variant="kosong">🟢</Badge> Kosong</span>
-                <span className="flex items-center gap-1"><Badge variant="pending">🟡</Badge> Pending</span>
-                <span className="flex items-center gap-1"><Badge variant="verifikasi">🔵</Badge> Verifikasi</span>
-                <span className="flex items-center gap-1"><Badge variant="terisi">🔴</Badge> Terisi</span>
+              <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-textSoft" aria-label="Keterangan status nomor">
+                {[...Object.values(SLOT_STATUS), SLOT_SELECTED].map(({ label, cls, Icon }) => (
+                  <span key={label} className="flex items-center gap-1.5">
+                    <span className={`flex h-6 w-6 items-center justify-center rounded-md border-2 ${cls}`}>
+                      {Icon && <Icon aria-hidden="true" className="h-3 w-3" />}
+                    </span>
+                    {label}
+                  </span>
+                ))}
               </div>
             </div>
 

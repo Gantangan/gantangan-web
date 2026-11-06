@@ -124,21 +124,21 @@ export default function Landing() {
                           : { background: `linear-gradient(135deg, ${c.tagColor}55, ${c.tagColor}11)` }
                       }
                     >
-                      <span className="absolute right-1.5 top-1.5 rounded-full bg-gold px-2 py-0.5 text-[9px] font-bold text-ink sm:right-2 sm:top-2 sm:px-2.5 sm:text-[10px]">
+                      <span className="absolute right-1.5 top-1.5 rounded-full bg-gold px-2 py-0.5 text-xs font-bold text-ink sm:right-2 sm:top-2 sm:px-2.5">
                         {Math.max(c.sisa, 0)} sisa
                       </span>
                     </div>
                     <div className="p-2.5 sm:p-4">
-                      <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide text-gold sm:gap-1.5 sm:text-[10.5px]">
-                        <span className="h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2" style={{ background: c.tagColor }} />
+                      <div className="flex items-start gap-1.5 text-xs font-bold uppercase leading-snug tracking-wide text-gold">
+                        <span className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: c.tagColor }} />
                         Kelas {c.name}
                       </div>
                       <div className="mt-1 font-display text-xs font-bold leading-snug group-hover:text-goldDeep sm:text-base">
                         {c.name}
                       </div>
-                      <div className="mt-1 flex items-center gap-1 text-[9.5px] text-textSoft sm:mt-2 sm:text-[11px]">
-                        <CalendarDays className="h-2.5 w-2.5 shrink-0 sm:h-3 sm:w-3" />
-                        <span className="truncate">{formatTanggalPanjang(c.jadwal)}</span>
+                      <div className="mt-1 flex items-start gap-1 text-xs leading-snug text-textSoft sm:mt-2">
+                        <CalendarDays className="mt-0.5 h-3 w-3 shrink-0" />
+                        <span>{formatTanggalPanjang(c.jadwal)}</span>
                       </div>
                       <div className="mt-1 font-display text-xs font-bold sm:mt-2 sm:text-base">{formatRupiah(c.harga)}</div>
                     </div>
